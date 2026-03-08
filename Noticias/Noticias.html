@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Noticias - LAYER 8 GAMES</title>
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="Noticias.css">
+</head>
+<body id="inicio">
+
+    <nav class="top-nav">
+        <button class="menu-btn" id="menuToggle" aria-label="Abrir menú">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="3" y1="12" x2="21" y2="12"></line>
+                <line x1="3" y1="6" x2="21" y2="6"></line>
+                <line x1="3" y1="18" x2="21" y2="18"></line>
+            </svg>
+        </button>
+        <div class="logo">
+            <span class="logo-text">LAYER 8 GAMES</span>
+        </div>
+        <a href="#" class="login-link">
+            <img src="/Iconologin.png" alt="Usuario" class="user-avatar">
+        </a>
+    </nav>
+
+    <aside class="side-menu" id="sideMenu">
+        <ul class="menu-links">
+            <li><a href="../index.html">INICIO</a></li>
+            <li><a href="Noticias.html" class="active">NOTICIAS</a></li>
+            <li><a href="../Juegos/Juegos.html">JUEGOS</a></li>
+            <li><a href="../T&C/T&C.html">T&C</a></li>
+        </ul>
+    </aside>
+
+    <header class="news-hero">
+        <div class="hero-content">
+            <h1 class="hero-title">CENTRO DE NOTICIAS</h1>
+            <p class="hero-paragraph">Mantente al tanto de las últimas actualizaciones, parches y anuncios de Layer 8 Games.</p>
+        </div>
+    </header>
+
+    <main class="container">
+        <div class="news-list">
+            
+            <article class="news-card">
+                <div class="news-image">
+                    <img src="/Banner1.jpeg" alt="Update 1">
+                </div>
+                <div class="news-content">
+                    <span class="date">05 MARZO 2024</span>
+                    <h2>NUEVA ACTUALIZACIÓN DE MOTOR UNITY</h2>
+                    <p>Hemos migrado nuestros sistemas principales para mejorar el rendimiento en un 20% en dispositivos de gama media.</p>
+                    <a href="#" class="btn-read">LEER MÁS</a>
+                </div>
+            </article>
+
+            <article class="news-card">
+                <div class="news-image">
+                    <img src="/Layer8Gameslogo500x500.png" alt="Update 2">
+                </div>
+                <div class="news-content">
+                    <span class="date">01 MARZO 2024</span>
+                    <h2>ANIVERSARIO LAYER 8 GAMES</h2>
+                    <p>Celebramos un año más creando experiencias independientes. Gracias por ser parte de nuestra comunidad.</p>
+                    <a href="#" class="btn-read">LEER MÁS</a>
+                </div>
+            </article>
+
+            <article class="news-card">
+                <div class="news-image">
+                    <img src="/LogoGameCenter.png" alt="Update 3">
+                </div>
+                <div class="news-content">
+                    <span class="date">20 FEBRERO 2024</span>
+                    <h2>BETA ABIERTA PRÓXIMAMENTE</h2>
+                    <p>Prepárate para las pruebas de estrés de nuestro nuevo título FPS. Las inscripciones se abren en Discord.</p>
+                    <a href="#" class="btn-read">LEER MÁS</a>
+                </div>
+            </article>
+
+        </div>
+    </main>
+
+    <footer class="bottom-section">
+        <a href="#inicio" class="scroll-top">VOLVER ARRIBA</a>
+        <div class="dotted-separator">. . . . . . . . . . . . . . .</div>
+        <div class="footer-logo">
+            <img src="/Layer8Gameslogo500x500.png" alt="Logo">
+            <span>LAYER 8 GAMES</span>
+        </div>
+    </footer>
+
+    <script>
+        const menuBtn = document.getElementById('menuToggle');
+        const sideMenu = document.getElementById('sideMenu');
+        menuBtn.addEventListener('click', () => {
+            sideMenu.classList.toggle('open');
+        });
+
+        /* EFECTO CLICK GLOW */
+
+        document.addEventListener("click", function(e){
+
+            const glow = document.createElement("div");
+            glow.className = "click-glow";
+
+            glow.style.left = e.clientX + "px";
+            glow.style.top = e.clientY + "px";
+
+            document.body.appendChild(glow);
+
+            setTimeout(() => {
+                glow.remove();
+            }, 600);
+
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,279 @@
+/* --- IMPORTACIÓN DE ESTILOS BASE --- */
+:root {
+    --bg-dark: #070b0e;       
+    --card-bg: #11161b;      
+    --accent-blue: #00d4ff;  
+    --accent-yellow: #ffc800; 
+    --yellow-glow: rgba(255, 200, 0, 0.4);
+    --text-main: #ffffff;
+    --text-muted: #94a3b8;   
+    --border-color: #1e262e;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: var(--bg-dark);
+    color: var(--text-main);
+    font-family: 'Rajdhani', sans-serif;
+    line-height: 1.5;
+    overflow-x: hidden;
+}
+
+/* --- BARRA DE NAVEGACIÓN SUPERIOR EXACTA AL INDEX --- */
+.top-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #000000;
+    padding: 10px 20px;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    border-bottom: 1px solid #222;
+}
+
+.menu-btn {
+    background: transparent;
+    border: none;
+    color: var(--text-main);
+    cursor: pointer;
+    padding: 5px;
+}
+
+.logo-text {
+    font-size: 1.2rem;
+    font-weight: 700;
+    letter-spacing: 3px;
+    color: var(--text-main);
+}
+
+.user-avatar {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    border: 2px solid transparent;
+    transition: border 0.3s;
+    object-fit: cover;
+}
+
+.user-avatar:hover {
+    border-color: var(--accent-blue);
+}
+
+/* --- MENÚ LATERAL EXACTO AL INDEX --- */
+.side-menu {
+    position: fixed;
+    top: 57px; /* Altura aproximada de la barra superior */
+    left: -250px; /* Oculto fuera de la pantalla por defecto */
+    width: 250px;
+    height: calc(100vh - 57px);
+    background-color: #0a0d10;
+    border-right: 1px solid var(--border-color);
+    transition: left 0.3s ease-in-out;
+    z-index: 999;
+    padding: 20px;
+}
+
+.side-menu.open {
+    left: 0;
+}
+
+.menu-links {
+    list-style: none;
+}
+
+.menu-links li {
+    margin-bottom: 15px;
+}
+
+.menu-links a {
+    color: var(--text-main);
+    text-decoration: none;
+    font-size: 1.2rem;
+    font-weight: 600;
+    letter-spacing: 1px;
+    transition: color 0.2s;
+}
+
+.menu-links a:hover,
+    .menu-links a.active { /* <--- AGREGA ESTA LÍNEA */
+    color: var(--accent-blue);   
+}
+
+/* --- HERO NOTICIAS (CON DOBLE CORTE) --- */
+.news-hero {
+    position: relative;
+    min-height: 500px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 120px 5%;
+    background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('Banner1.jpeg');
+    background-size: cover;
+    background-position: center;
+    
+    /* DOBLE CORTE: ARRIBA Y ABAJO */
+    clip-path: polygon(
+        0 10%, 35% 10%, 40% 0, 60% 0, 65% 10%, 100% 10%, 
+        100% 90%, 65% 90%, 60% 100%, 40% 100%, 35% 90%, 0 90%
+    );
+    
+    margin-top: -10px;
+    margin-bottom: -40px; 
+}
+
+.hero-content { text-align: center; max-width: 800px; }
+.hero-title { font-size: clamp(2.5rem, 8vw, 4rem); letter-spacing: 5px; margin-bottom: 15px; }
+.hero-paragraph { font-size: 1.2rem; color: var(--text-muted); }
+
+/* --- CONTENEDOR DE NOTICIAS --- */
+.container {
+    max-width: 1100px;
+    margin: 80px auto;
+    padding: 0 20px;
+}
+
+.news-list { 
+    display: flex; 
+    flex-direction: column; 
+    gap: 40px; 
+}
+
+/* --- TARJETAS DE NOTICIAS --- */
+.news-card {
+    position: relative; /* Necesario para el neón de fondo */
+    display: grid;
+    grid-template-columns: 350px 1fr;
+    background-color: var(--card-bg);
+    border: 1px solid var(--border-color);
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    cursor: pointer;
+    overflow: visible; /* Cambiado a visible para dejar salir el resplandor */
+    z-index: 1;
+}
+
+.news-image {
+    overflow: hidden; /* Esto evita que el zoom de la imagen se salga del cuadro */
+    height: 100%;
+    width: 100%;
+}
+
+.news-image img { 
+    width: 100%; 
+    height: 100%; 
+    object-fit: contain; /* Cambia a 'contain' para que no se recorte el logo */
+    transition: 0.5s; 
+}
+
+/* EL NEÓN DETRÁS (Invisible por defecto) */
+.news-card::after {
+    content: "";
+    position: absolute;
+    top: -5px;
+    left: -5px;
+    right: -5px;
+    bottom: -5px;
+    border: 2px solid var(--accent-yellow);
+    box-shadow: 
+        0 0 10px var(--accent-yellow),
+        0 0 30px rgb(255, 238, 0),
+        0 0 60px rgb(229, 255, 0);
+    filter: blur(10px);
+    opacity: 0;
+    transition: opacity 0.5s ease;
+    pointer-events: none;
+    z-index: -1;
+}
+
+/* --- HOVER DE LAS TARJETAS --- */
+.news-card:hover {
+    transform: translateY(-8px) scale(1.01); /* Movimiento elástico */
+    border-color: var(--accent-yellow);
+}
+
+.news-card:hover::after {
+    opacity: 0.8; /* Activa el neón al acercar el mouse */
+}
+
+.news-image img { width: 100%; height: 100%; object-fit: cover; transition: 0.5s; }
+.news-card:hover .news-image img { transform: scale(1.1); }
+
+.news-content { padding: 40px; display: flex; flex-direction: column; justify-content: center; }
+.news-content .date { color: var(--accent-yellow); font-weight: 700; font-size: 0.85rem; margin-bottom: 12px; }
+.news-content h2 { font-size: 1.8rem; margin-bottom: 15px; }
+.news-content p { color: var(--text-muted); margin-bottom: 25px; }
+.btn-read { color: var(--accent-blue); text-decoration: none; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; }
+
+/* --- FOOTER --- */
+.bottom-section {
+    background-color: #000;
+    padding: 80px 20px;
+    text-align: center;
+    /* Corte superior del footer */
+    clip-path: polygon(0 5%, 30% 5%, 35% 0, 65% 0, 70% 5%, 100% 5%, 100% 100%, 0 100%);
+    padding-top: 80px;
+}
+
+.dotted-separator { color: #2d3748; margin: 30px 0; }
+.footer-logo { display: flex; align-items: center; justify-content: center; gap: 15px; }
+.footer-logo img { height: 40px; }
+
+/* RESPONSIVO */
+@media (max-width: 900px) {
+    .news-card { grid-template-columns: 1fr; }
+    .news-image { height: 250px; }
+    .news-hero { min-height: 400px; clip-path: none; } /* Simplificado en móvil */
+}
+
+/* --- AJUSTES PARA EL FOOTER Y SCROLL SUAVE --- */
+html {
+    scroll-behavior: smooth;
+}
+
+/* boton volver arriba */
+.scroll-top {
+    color: var(--accent-blue);
+    text-decoration: none;
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+    transition: color 0.3s;
+}
+
+.scroll-top:hover {
+    color: #ffffff;
+}
+
+/* EFECTO GLOW AL HACER CLICK */
+.click-glow{
+    position: fixed;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: radial-gradient(
+        circle,
+        rgba(0,212,255,0.9) 0%,
+        rgba(0,212,255,0.4) 40%,
+        transparent 70%
+    );
+    transform: translate(-50%, -50%);
+    animation: clickGlowAnim 0.6s ease-out forwards;
+    pointer-events: none;
+    z-index: 9999;
+}
+
+/* ANIMACION */
+@keyframes clickGlowAnim{
+    0%{ transform: translate(-50%, -50%) scale(0.3); opacity: 1; }
+    70%{ transform: translate(-50%, -50%) scale(3); opacity: 0.6; }
+    100%{ transform: translate(-50%, -50%) scale(4); opacity: 0; }
+}

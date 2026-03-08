@@ -1,0 +1,695 @@
+/* --- IMPORTACIÓN DE ESTILOS BASE --- */
+
+:root {
+    --bg-dark: #070b0e;
+    --card-bg: #11161b;
+    --accent-blue: #00d4ff;
+    --accent-yellow: #ffc800;
+    --yellow-glow: rgba(255, 200, 0, 0.4);
+    --blue-glow: rgba(0, 212, 255, 0.4);
+    --text-main: #ffffff;
+    --text-muted: #94a3b8;
+    --border-color: #1e262e;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: var(--bg-dark);
+    color: var(--text-main);
+    font-family: 'Rajdhani', sans-serif;
+    line-height: 1.5;
+    overflow-x: hidden;
+}
+
+/* --- AJUSTES PARA EL FOOTER Y SCROLL SUAVE --- */
+        html {
+            scroll-behavior: smooth;
+        }
+
+
+/* --------- NAV --------- */
+
+.top-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #000;
+    padding: 10px 20px;
+    position: sticky;
+    top: 0;
+    z-index: 1001;
+    border-bottom: 1px solid var(--border-color);
+    box-shadow: 0 0 5px var(--blue-glow);
+    height: 60px;
+}
+
+.logo-text {
+    margin-left: 400px; /* Ajusta este valor a tu gusto */
+     font-size: 1.2rem;
+    font-weight: 700;
+    letter-spacing: 3px;
+}
+
+.menu-btn {
+    background: none;
+    border: none;
+    color: white;
+    cursor: pointer;
+}
+
+.nav-right {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.user-avatar {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 1px solid var(--border-color);
+}
+
+/* --------- CARRITO ICONO --------- */
+
+.cart-link {
+    position: relative;
+    color: white;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    transition: 0.2s;
+}
+
+.cart-link:hover {
+    color: var(--accent-blue);
+}
+
+.cart-counter {
+    position: absolute;
+    top: -5px;
+    right: -10px;
+    background: var(--accent-yellow);
+    color: #000;
+    font-size: 0.7rem;
+    font-weight: 700;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* --- MENÚ LATERAL EXACTO AL INDEX --- */
+.side-menu {
+    position: fixed;
+    top: 57px; /* Altura aproximada de la barra superior */
+    left: -250px; /* Oculto fuera de la pantalla por defecto */
+    width: 250px;
+    height: calc(100vh - 57px);
+    background-color: #0a0d10;
+    border-right: 1px solid var(--border-color);
+    transition: left 0.3s ease-in-out;
+    z-index: 999;
+    padding: 20px;
+}
+
+.side-menu.open {
+    left: 0;
+}
+
+.menu-links {
+    list-style: none;
+}
+
+.menu-links li {
+    margin-bottom: 15px;
+}
+
+.menu-links a {
+    color: var(--text-main);
+    text-decoration: none;
+    font-size: 1.2rem;
+    font-weight: 600;
+    letter-spacing: 1px;
+    transition: color 0.2s;
+}
+
+/* Enlace activo y hover en Azul */
+.menu-links a:hover,
+.menu-links a.active {
+    color: var(--accent-blue); /* Color azul */
+}
+
+/* --------- HERO --------- */
+.games-hero {
+    position: relative;
+    min-height: 400px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 100px 5%;
+    background:
+        linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.8)),
+        url("/Banner1.jpeg");
+    background-size: cover;
+    background-position: center;
+    clip-path: polygon(
+        0 10%, 35% 10%, 40% 0, 60% 0, 65% 10%, 100% 10%,
+        100% 90%, 65% 90%, 60% 100%, 40% 100%, 35% 90%, 0 90%
+    );
+    margin-top: -10px;
+    margin-bottom: -20px;
+}
+
+/* --------- BUSCADOR DE JUEGOS --------- */
+.search-container {
+    display: flex;
+    max-width: 600px;
+    margin: 40px auto; 
+    background-color: #11161b; 
+    border: 1px solid var(--border-color);
+    border-radius: 30px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    width: 90%;
+}
+
+.search-container:hover, 
+.search-container:focus-within {
+    border-color: var(--accent-blue);
+    box-shadow: 0 0 15px rgba(0, 212, 255, 0.3);
+}
+
+.search-input {
+    flex: 1;
+    padding: 15px 25px;
+    background: transparent;
+    border: none;
+    color: #ffffff;
+    font-family: inherit;
+    font-size: 1.1rem;
+    outline: none;
+}
+
+.search-input::placeholder {
+    color: var(--text-muted);
+}
+
+.search-btn {
+    background-color: transparent;
+    color: var(--accent-blue);
+    border: none;
+    padding: 0 25px;
+    cursor: pointer;
+    font-size: 1.2rem;
+    transition: transform 0.2s, color 0.3s;
+}
+
+.search-btn:hover {
+    color: var(--accent-yellow);
+    transform: scale(1.15);
+}
+
+.hero-content {
+    text-align: center;
+    max-width: 800px;
+}
+
+.hero-title {
+    font-size: clamp(2.5rem, 8vw, 4rem);
+    letter-spacing: 5px;
+    margin-bottom: 10px;
+    text-shadow: 0 0 20px var(--blue-glow);
+}
+
+.hero-paragraph {
+    font-size: 1.2rem;
+    color: var(--text-muted);
+}
+
+/* --------- TIENDA --------- */
+
+.store-container {
+    max-width: 1200px;
+    margin: 60px auto;
+    padding: 0 20px;
+}
+
+.games-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+}
+
+/* TARJETA */
+
+.game-card{
+    position: relative;
+    background: var(--card-bg);
+    border: 2px solid #00d4ff;
+    transition: transform 0.3s ease;
+}
+
+
+/* GLOW EXTERIOR SUAVE */
+
+.game-card::after{
+
+    content:"";
+    position:absolute;
+
+    top:-10px;
+    left:-10px;
+    right:-10px;
+    bottom:-10px;
+
+    border:2px solid #00d4ff;
+
+    box-shadow:
+        0 0 6px #00d4ff,
+        0 0 15px rgba(0,212,255,0.5),
+        0 0 35px rgba(0,212,255,0.35);
+
+    filter: blur(8px);
+
+    opacity:0;
+
+    pointer-events:none;
+
+    z-index:-1;
+
+}
+
+
+/* HOVER */
+
+.game-card:hover{
+    transform: translateY(-6px) scale(1.02);
+}
+
+.game-card:hover::after{
+
+    box-shadow:
+        0 0 10px #00eaff,
+        0 0 30px rgba(0,234,255,0.8),
+        0 0 70px rgba(0,212,255,0.7);
+
+    opacity:1;
+
+}
+/* --------- IMAGEN --------- */
+
+.game-image {
+    position: relative;
+    height: 300px;
+    overflow: hidden;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.game-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+}
+
+.game-card:hover img {
+    transform: scale(1.08);
+}
+
+.game-card:hover::after {
+    filter: blur(10px);
+    animation-duration: 2s;
+}
+
+/* etiquetas */
+
+.tag {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: var(--accent-blue);
+    color: #000;
+    font-weight: 700;
+    font-size: 0.8rem;
+    padding: 4px 10px;
+    letter-spacing: 1px;
+}
+
+.tag.discount {
+    background: var(--accent-yellow);
+}
+
+.game-content {
+    padding: 25px;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+}
+
+.game-content h2 {
+    font-size: 1.6rem;
+    letter-spacing: 1px;
+    margin-bottom: 5px;
+}
+
+.genre {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    margin-bottom: 25px;
+    text-transform: uppercase;
+}
+
+/* compra */
+
+.purchase-area {
+    margin-top: auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 15px;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.price {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--accent-yellow);
+}
+
+.prices-discount {
+    display: flex;
+    flex-direction: column;
+}
+
+.price-old {
+    text-decoration: line-through;
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    line-height: 1;
+}
+
+.btn-add-cart {
+    background: transparent;
+    border: 1px solid var(--accent-blue);
+    color: var(--accent-blue);
+    padding: 8px 15px;
+    font-family: 'Rajdhani', sans-serif;
+    font-weight: 700;
+    font-size: 0.9rem;
+    letter-spacing: 1px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: 0.3s;
+}
+
+.btn-add-cart:hover {
+    background: var(--accent-blue);
+    color: #000;
+    box-shadow: 0 0 10px var(--blue-glow);
+}
+
+/* --------- CARRITO LATERAL --------- */
+
+.cart-drawer {
+    position: fixed;
+    right: -400px;
+    top: 0;
+    width: 350px;
+    height: 100%;
+    background: #0a0d10;
+    border-left: 1px solid var(--border-color);
+    transition: 0.35s;
+    z-index: 2000;
+    display: flex;
+    flex-direction: column;
+}
+
+.cart-drawer.open {
+    right: 0;
+}
+
+.cart-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.close-cart {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 22px;
+    cursor: pointer;
+}
+
+.cart-body {
+    flex: 1;
+    overflow-y: auto;
+    padding: 20px;
+}
+
+.empty-msg {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+}
+
+.cart-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 15px;
+    border-bottom: 1px solid #222;
+    padding-bottom: 10px;
+}
+
+.cart-item img {
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+}
+
+.cart-item button {
+    margin-left: auto;
+    background: none;
+    border: none;
+    color: #ff4d4d;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.cart-footer {
+    padding: 20px;
+    border-top: 1px solid var(--border-color);
+}
+
+.btn-checkout {
+    width: 100%;
+    background: var(--accent-yellow);
+    border: none;
+    padding: 12px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+/* overlay */
+
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: none;
+    z-index: 1500;
+}
+
+.overlay.show {
+    display: block;
+}
+
+/* --------- FOOTER --------- */
+
+.bottom-section {
+    background: #000;
+    padding: 80px 20px;
+    text-align: center;
+ clip-path: polygon(0 8%, 35% 8%, 40% 0, 60% 0, 65% 8%, 100% 8%, 100% 100%, 0 100%);
+    margin-top: 50px;
+}
+
+.scroll-top {
+            color: var(--accent-blue);
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 700;
+            letter-spacing: 2px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+            transition: color 0.3s;
+        }
+
+        .scroll-top:hover {
+            color: #ffffff;
+        }
+
+.footer-logo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    opacity: 0.8;
+}
+
+.footer-logo img {
+    height: 40px;
+}
+
+/* --------- RESPONSIVE PARA TELÉFONOS --------- */
+
+@media (max-width: 768px) {
+    /* 1. Ajuste de la barra principal */
+    .top-nav {
+        height: 55px; /* Altura un poco más compacta */
+        padding: 0 10px; /* Menos espacio a los lados */
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 5px; /* Espacio mínimo entre elementos */
+    }
+
+    /* 2. Logo: Quitamos márgenes y achicamos letra */
+    .logo-text {
+        margin: 0 !important; 
+        font-size: 0.85rem !important; /* Letra más pequeña */
+        letter-spacing: 1px;
+        white-space: nowrap; /* Evita que el nombre se rompa en dos líneas */
+        flex-shrink: 1; /* Permite que el logo ceda espacio si es necesario */
+    }
+
+    /* 3. El contenedor de la derecha (donde están carrito, buscador y avatar) */
+    .nav-right {
+        gap: 8px !important; /* Espacio muy pequeño entre iconos */
+        display: flex;
+        align-items: center;
+        flex-shrink: 0; /* Que no se achique más de la cuenta */
+    }
+
+    /* 4. BUSCADOR: El secreto para que quepa todo */
+    .search-container {
+        margin: 0 !important; /* Quitamos márgenes de afuera */
+        width: 120px !important; /* Ancho fijo muy pequeño para móvil */
+        height: 30px !important; /* Más bajito */
+        border-radius: 15px;
+    }
+
+    .search-input {
+        padding: 0 10px !important;
+        font-size: 0.7rem !important; /* Texto muy pequeño */
+    }
+
+    .search-btn {
+        padding: 0 8px !important;
+        font-size: 0.8rem !important;
+    }
+
+    /* 5. Iconos y Avatar */
+    .user-avatar {
+        width: 28px !important; /* Avatar más pequeño */
+        height: 28px !important;
+    }
+
+    .cart-link i, .menu-btn i {
+        font-size: 1.1rem !important; /* Iconos más pequeños */
+    }
+
+    .cart-counter {
+        width: 14px;
+        height: 14px;
+        font-size: 0.6rem;
+        top: -3px;
+        right: -6px;
+    }
+
+    /* 6. Ajuste de Side Menu y Hero para móvil */
+    .side-menu {
+        top: 55px;
+        width: 250px;
+    }
+
+    .games-hero {
+        margin-top: 0;
+        padding: 40px 10px;
+        clip-path: none; /* Quitamos el recorte para ganar espacio */
+        min-height: 200px;
+    }
+
+    .hero-title {
+        font-size: 1.4rem !important;
+    }
+
+}
+
+/* EFECTO GLOW AL HACER CLICK */
+
+.click-glow{
+
+    position: fixed;
+
+    width: 20px;
+    height: 20px;
+
+    border-radius: 50%;
+
+    background: radial-gradient(
+        circle,
+        rgba(0,212,255,0.9) 0%,
+        rgba(0,212,255,0.4) 40%,
+        transparent 70%
+    );
+
+    transform: translate(-50%, -50%);
+
+    animation: clickGlowAnim 0.6s ease-out forwards;
+
+    pointer-events: none;
+
+    z-index: 9999;
+
+}
+
+/* ANIMACION */
+
+@keyframes clickGlowAnim{
+
+    0%{
+        transform: translate(-50%, -50%) scale(0.3);
+        opacity: 1;
+    }
+
+    70%{
+        transform: translate(-50%, -50%) scale(3);
+        opacity: 0.6;
+    }
+
+    100%{
+        transform: translate(-50%, -50%) scale(4);
+        opacity: 0;
+    }
+
+}
