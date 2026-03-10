@@ -106,30 +106,93 @@ body {
 }
 
 /* --- HERO NOTICIAS (CON DOBLE CORTE) --- */
+/* --- HERO NOTICIAS (MODIFICADO PARA PANTALLA COMPLETA Y OPACIDAD) --- */
 .news-hero {
     position: relative;
-    min-height: 500px;
+    width: 100vw; /* Ancho completo de la ventana */
+    min-height: 80vh; /* Alto casi completo de la ventana */
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 120px 5%;
-    background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('Banner1.jpeg');
-    background-size: cover;
-    background-position: center;
+    padding: 100px 5%; /* Padding vertical para dar espacio al texto */
+    background-color: #ffffff0a; /* Fondo negro base */
+    overflow: hidden; /* Importante para el pseudo-elemento */
     
-    /* DOBLE CORTE: ARRIBA Y ABAJO */
+    /* DOBLE CORTE GEOMÉTRICO: Se aplica a TODO el contenedor (incluida la imagen) */
     clip-path: polygon(
         0 10%, 35% 10%, 40% 0, 60% 0, 65% 10%, 100% 10%, 
         100% 90%, 65% 90%, 60% 100%, 40% 100%, 35% 90%, 0 90%
     );
     
+    /* Ajustes para que no se superponga */
     margin-top: -10px;
-    margin-bottom: -40px; 
+    margin-bottom: 20px; 
 }
 
-.hero-content { text-align: center; max-width: 800px; }
-.hero-title { font-size: clamp(2.5rem, 8vw, 4rem); letter-spacing: 5px; margin-bottom: 15px; }
-.hero-paragraph { font-size: 1.2rem; color: var(--text-muted); }
+/* PSEUDO-ELEMENTO PARA LA IMAGEN DE FONDO CON OPACIDAD */
+.news-hero::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url('/BannerLayer8.jpg'); 
+    background-size: cover; 
+    
+    /* --- AQUÍ MUEVES LA IMAGEN --- */
+    /* El primer valor es horizontal (Izquierda/Derecha), el segundo es vertical (Arriba/Abajo) */
+    background-position: 48% 50%; 
+    
+    background-repeat: no-repeat;
+    opacity: 0.6; /* Sube a 0.5 o 0.6 si quieres que se vea más */
+    z-index: 0;
+}
+
+/* --- TÍTULO (LIMPIADO Y AJUSTADO) --- */
+.hero-content { 
+    text-align: center; 
+    max-width: 1000px; /* Ancho máximo para el texto */
+    position: relative; 
+    z-index: 1; /* Por encima de la imagen de fondo */
+}
+
+.hero-title { 
+    font-size: clamp(2.5rem, 8vw, 5rem); 
+    letter-spacing: 8px; 
+    font-weight: 800;
+    color: #ffffff;
+    text-transform: uppercase;
+    margin: 0;
+    padding: 0;
+    
+    /* EFECTO NEÓN AZUL: Varias capas de sombra para que brille */
+    text-shadow: 
+        0 0 5px #fff,
+        0 0 10px var(--accent-blue),
+        0 0 20px var(--accent-blue),
+        0 0 40px var(--accent-blue),
+        0 0 80px #0033ff; /* Un azul más profundo al fondo */
+}
+
+.hero-paragraph { 
+    font-size: 1.2rem; 
+    color: var(--text-muted); 
+    margin-top: 15px; /* Pequeña separación del título */
+    font-weight: 800;
+    color: #ece6e6;
+    text-transform: uppercase;
+    margin: 0;
+    padding: 0;
+    
+    /* EFECTO NEÓN AZUL: Varias capas de sombra para que brille */
+    text-shadow: 
+        0 0 5px #afafaf,
+        0 0 10px var(--accent-blue),
+        0 0 20px var(--accent-blue),
+        0 0 40px var(--accent-blue),
+        0 0 80px #0084ffaf; /* Un azul más profundo al fondo */
+}
 
 /* --- CONTENEDOR DE NOTICIAS --- */
 .container {
