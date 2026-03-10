@@ -34,11 +34,11 @@
         </a>
 
         <div class="search-container">
-              <input type="text" id="game-search" class="search-input" placeholder="Buscar juego por nombre o género...">
-              <button class="search-btn" title="Buscar">
-        🔍    </button>
-          </div>
-
+          <input type="text" id="game-search" class="search-input" placeholder="Buscar juego por nombre o género...">
+          <button class="search-btn" title="Buscar">
+            🔍
+          </button>
+        </div>
         <a href="#" class="login-link">
           <img src="/Iconologin.png" class="user-avatar">
         </a>
@@ -122,13 +122,58 @@
       </div>
     </main>
 
-    <footer class="bottom-section">
-      <a href="#inicio" class="scroll-top">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <polyline points="18 15 12 9 6 15"></polyline>
-            </svg>
-        VOLVER ARRIBA
-      </a>
+    <h1 class="hero-title" style="text-align: center;">Zona Interactiva de Layer8Games</h1>
+
+    <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.0.0/model-viewer.min.js"></script>
+
+    <div class="shop-grid">
+      <div class="card-3d">
+        <h3>Master Chief</h3>
+        <div class="container-3d" id="cont-1">
+          <div class="zona-selector"></div>
+          <model-viewer id="model-1" src="https://cdn.jsdelivr.net/gh/jose1214pro/layer8games@main/MasterChief2.glb" camera-controls auto-rotate autoplay>
+            <div class="anim-selector"></div>
+          </model-viewer>
+          <div class="palette-container">
+            <input type="color" class="color-input" oninput="applyColor('cont-1', 'model-1', this.value)">
+          </div>
+        </div>
+      </div>
+
+      <div class="card-3d">
+        <h3>Man TV</h3>
+        <div class="container-3d" id="cont-2">
+          <div class="zona-selector"></div>
+          <model-viewer id="model-2" src="https://cdn.jsdelivr.net/gh/jose1214pro/layer8games@main/man.glb" camera-controls auto-rotate autoplay>
+            <div class="anim-selector"></div>
+          </model-viewer>
+          <div class="palette-container">
+            <input type="color" class="color-input" oninput="applyColor('cont-2', 'model-2', this.value)">
+          </div>
+        </div>
+      </div>
+
+      <div class="card-3d">
+        <h3>Vortex Enemigo</h3>
+        <div class="container-3d" id="cont-3">
+          <div class="zona-selector"></div>
+          <model-viewer id="model-3" src="https://cdn.jsdelivr.net/gh/jose1214pro/layer8games@main/VortexEnemigo.glb" camera-controls auto-rotate autoplay>
+            <div class="anim-selector"></div>
+          </model-viewer>
+          <div class="palette-container">
+            <input type="color" class="color-input" oninput="applyColor('cont-3', 'model-3', this.value)">
+          </div>
+        </div>
+      </div>
+    </div>
+
+<footer class="bottom-section">
+  <a href="#inicio" class="scroll-top">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <polyline points="18 15 12 9 6 15"></polyline>
+    </svg>
+    VOLVER ARRIBA
+  </a>
 
       <div class="footer-logo">
         <img src="/Layer8Gameslogo500x500.png">
@@ -321,6 +366,119 @@
         e.preventDefault(); // Evita que la página recargue por accidente
         searchAndScroll();
       });
+    </script>
+
+    <script>
+      const seleccionesSubclase = {};
+
+      // Función optimizada para detectar y mostrar animaciones
+      function setupAnimations(mv, animSelector) {
+        const animations = mv.availableAnimations;
+        
+        if (animSelector && animations.length > 0) {
+          animSelector.innerHTML = ''; // Limpiamos "Cargando..." o botones viejos
+          
+          animations.forEach((animName) => {
+            const btn = document.createElement('button');
+            btn.textContent = animName; 
+            btn.onclick = () => {
+              mv.animationName = animName;
+              mv.play();
+            };
+            animSelector.appendChild(btn);
+          });
+          
+          // Auto-reproducir la primera
+          mv.animationName = animations[0];
+          mv.play();
+          console.log(`✅ Animaciones cargadas para ${mv.id}:`, animations);
+        } else {
+          console.warn(`⚠️ No se detectaron animaciones en ${mv.id} aún.`);
+        }
+      }
+
+      document.querySelectorAll('model-viewer').forEach((mv) => {
+        mv.addEventListener('load', () => {
+          const container = mv.closest('.container-3d');
+          const contId = container.id;
+          const materialSelector = container.querySelector('.zona-selector');
+          const animSelector = container.querySelector('.anim-selector');
+
+          // --- 1. CARGAR MATERIALES ---
+          const materials = mv.model.materials;
+          if (materialSelector) {
+            materialSelector.innerHTML = ''; 
+            materials.forEach((material, index) => {
+              const btn = document.createElement('button');
+              btn.textContent = material.name || `Parte ${index + 1}`;
+              if (index === 0) {
+                btn.classList.add('active');
+                seleccionesSubclase[contId] = material.name;
+              }
+              btn.onclick = () => {
+                seleccionesSubclase[contId] = material.name;
+                materialSelector.querySelectorAll('button').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+              };
+              materialSelector.appendChild(btn);
+            });
+          }
+
+          // --- 2. CARGAR ANIMACIONES CON RE-INTENTO ---
+          // Intentar inmediatamente
+          setupAnimations(mv, animSelector);
+          
+          // Re-intentar a los 500ms por si el modelo es pesado (como Man TV)
+          setTimeout(() => {
+            if (animSelector && animSelector.children.length === 0) {
+              setupAnimations(mv, animSelector);
+            }
+          }, 500);
+        });
+      });
+
+      function applyColor(contId, modelId, hex) {
+        const mv = document.getElementById(modelId);
+        if (!mv || !mv.model) return;
+        const materialName = seleccionesSubclase[contId];
+        const color = hexToRgba(hex);
+        const material = mv.model.materials.find(m => m.name === materialName);
+        if (material) material.pbrMetallicRoughness.setBaseColorFactor(color);
+      }
+
+      function hexToRgba(hex) {
+        const r = parseInt(hex.slice(1, 3), 16) / 255;
+        const g = parseInt(hex.slice(3, 5), 16) / 255;
+        const b = parseInt(hex.slice(5, 7), 16) / 255;
+        return [r, g, b, 1];
+      }
+
+      function setupAnimations(mv, animSelector) {
+        let animations = mv.availableAnimations;
+        
+        // SI ES EL MODELO DE MAN TV (model-2), IGNORAMOS LAS PRIMERAS 2
+        if (mv.id === 'model-2') {
+          animations = animations.slice(2); 
+        }
+
+        if (animSelector && animations.length > 0) {
+          animSelector.innerHTML = ''; 
+          
+          animations.forEach((animName) => {
+            const btn = document.createElement('button');
+            btn.textContent = animName; 
+            btn.onclick = () => {
+              mv.animationName = animName;
+              mv.play();
+            };
+            animSelector.appendChild(btn);
+          });
+          
+          // Reproduce la primera de la lista filtrada
+          mv.animationName = animations[0];
+          mv.play();
+        }
+      }
     </script>
   </body>
 </html>

@@ -645,6 +645,143 @@ body {
 
 }
 
+/* modelos 3d*/
+
+/* FUERZA LA FILA HORIZONTAL */
+.shop-grid {
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+    padding: 40px;
+    overflow-x: auto;
+    justify-content: center; /* CENTRA LAS TARJETAS */
+    align-items: flex-start;
+}
+
+.card-3d {
+    flex: 0 0 400px;
+    background: #111;
+    border-radius: 15px;
+    padding: 15px;
+    border: 1px solid #333;
+    text-align: center; /* CENTRA EL TÍTULO */
+}
+
+  .container-3d {
+    width: 100%;
+    height: 500px; 
+    background: radial-gradient(circle, #1a1a1a 0%, #000 100%);
+    position: relative;
+    border-radius: 10px;
+    overflow: hidden;
+  }
+
+  model-viewer {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1;
+  }
+
+  /* INTERFAZ FLOTANTE */
+/* Evita que los botones de materiales se salgan de la tarjeta */
+.zona-selector {
+    position: absolute;
+    top: 15px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 5px;
+    z-index: 5;
+    background: rgba(0,0,0,0.7);
+    padding: 8px;
+    border-radius: 20px;
+    backdrop-filter: blur(5px);
+    max-width: 90%;          /* No permite que sea más ancho que la tarjeta */
+    overflow-x: auto;        /* Scroll horizontal para los nombres */
+    scrollbar-width: none;   /* Oculta scrollbar en Firefox */
+}
+.zona-selector::-webkit-scrollbar { display: none; }
+
+  .zona-selector button {
+    background: transparent;
+    color: white;
+    border: none;
+    padding: 5px 12px;
+    border-radius: 15px;
+    cursor: pointer;
+    font-size: 12px;
+  }
+
+  .zona-selector button.active {
+    background: #00e5ff;
+    color: black;
+  }
+
+  .palette-container {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 5;
+  }
+
+.color-input {
+    appearance: none;           /* Estándar moderno */
+    -webkit-appearance: none;    /* Para Chrome, Safari y Edge */
+    -moz-appearance: none;       /* Para Firefox */
+    width: 45px;
+    height: 45px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 0;                  /* Elimina espacio interno extra */
+  }
+
+  /* Específico para Firefox para quitar el borde interno */
+  .color-input::-moz-color-swatch {
+    border-radius: 50%;
+    border: 2px solid white;
+  }
+
+  .color-input::-webkit-color-swatch {
+    border-radius: 50%;
+    border: 2px solid white;
+  }
+
+.anim-selector {
+  position: absolute;
+  bottom: 80px; 
+  right: 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  z-index: 20; /* Aumentado para estar sobre todo */
+  min-width: 60px;
+  min-height: 20px;
+}
+
+.anim-selector button {
+  background: rgba(0, 229, 255, 0.2);
+  color: #00e5ff;
+  border: 1px solid #00e5ff;
+  padding: 6px 12px;
+  border-radius: 4px;
+  font-family: 'Rajdhani', sans-serif;
+  font-weight: bold;
+  cursor: pointer;
+  backdrop-filter: blur(5px);
+  transition: 0.3s;
+}
+
+.anim-selector button:hover {
+  background: #00e5ff;
+  color: black;
+}
+
+
 /* EFECTO GLOW AL HACER CLICK */
 
 .click-glow{
