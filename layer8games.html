@@ -1,0 +1,966 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Layer8Games — Estudio Indie Mexicano</title>
+  <meta name="description" content="Layer8Games es un estudio de desarrollo de videojuegos indie Mexicano. Creamos juegos experimentales, proyectos FPS en Unity y experiencias innovadoras.">
+  <meta name="keywords" content="Layer8Games, videojuegos, indie, desarrollo de videojuegos, Unity, FPS">
+  <meta name="author" content="Layer8Games">
+  <meta property="og:title" content="Layer8Games">
+  <meta property="og:description" content="Estudio de desarrollo de videojuegos indie.">
+  <meta property="og:image" content="https://layer8games.de/layer8gameslogooriginal.jpeg">
+  <meta property="og:url" content="https://layer8games.de/">
+  <meta property="og:type" content="website">
+  <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;600;700&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+  <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.4.0/model-viewer.min.js"></script>
+
+<style>
+/* =============================================
+   LAYER8GAMES — MAIN STYLESHEET
+   Theme: Gamer Neon / Cyberpunk Tactical
+   ============================================= */
+
+:root {
+  --bg:        #06080c;
+  --bg-card:   #0d1117;
+  --bg-nav:    rgba(6,8,12,0.96);
+  --blue:      #00d4ff;
+  --yellow:    #ffc800;
+  --red:       #ff3c3c;
+  --text:      #e8eaf0;
+  --muted:     #4a5568;
+  --border:    rgba(0,212,255,0.12);
+}
+
+/* RESET */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Rajdhani', sans-serif;
+  line-height: 1.5;
+  overflow-x: hidden;
+  cursor: crosshair;
+}
+
+/* ── SCANLINE OVERLAY ── */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0,0,0,0.08) 2px,
+    rgba(0,0,0,0.08) 4px
+  );
+  pointer-events: none;
+  z-index: 9998;
+}
+
+/* ── CLICK GLOW ── */
+.click-glow {
+  position: fixed;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(0,212,255,0.9) 0%, rgba(0,212,255,0.4) 40%, transparent 70%);
+  transform: translate(-50%, -50%);
+  animation: clickGlowAnim 0.6s ease-out forwards;
+  pointer-events: none;
+  z-index: 9999;
+}
+@keyframes clickGlowAnim {
+  0%   { transform: translate(-50%,-50%) scale(0.3); opacity: 1; }
+  70%  { transform: translate(-50%,-50%) scale(3);   opacity: 0.6; }
+  100% { transform: translate(-50%,-50%) scale(4);   opacity: 0; }
+}
+
+/* ══════════════════════════════════════════
+   NAVIGATION
+══════════════════════════════════════════ */
+.top-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #000000;
+  border-bottom: 1px solid #1a1a1a;
+  padding: 0 24px;
+  height: 58px;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+/* Corner accent */
+.top-nav::before {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0;
+  width: 120px; height: 2px;
+  background: linear-gradient(90deg, var(--blue), transparent);
+  box-shadow: 0 0 8px var(--blue);
+}
+.top-nav::after {
+  content: '';
+  position: absolute;
+  bottom: 0; right: 0;
+  width: 80px; height: 2px;
+  background: linear-gradient(270deg, var(--yellow), transparent);
+  box-shadow: 0 0 8px var(--yellow);
+}
+
+.menu-btn {
+  background: transparent;
+  border: 1px solid rgba(0,212,255,0.2);
+  border-radius: 4px;
+  color: var(--text);
+  cursor: pointer;
+  padding: 6px 8px;
+  transition: border-color 0.3s, background 0.3s;
+  display: flex;
+  align-items: center;
+}
+.menu-btn:hover {
+  border-color: var(--blue);
+  background: rgba(0,212,255,0.07);
+}
+
+.logo-text {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 4px;
+  color: var(--blue);
+  text-shadow: 0 0 12px var(--blue);
+}
+
+.user-avatar {
+  width: 34px; height: 34px;
+  border-radius: 50%;
+  border: 1px solid rgba(0,212,255,0.3);
+  object-fit: cover;
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+.user-avatar:hover {
+  border-color: var(--blue);
+  box-shadow: 0 0 12px rgba(0,212,255,0.4);
+}
+
+/* ── SIDE MENU ── */
+.side-menu {
+  position: fixed;
+  top: 58px; left: -260px;
+  width: 260px;
+  height: calc(100vh - 58px);
+  background: #080b10;
+  border-right: 1px solid var(--border);
+  transition: left 0.3s ease;
+  z-index: 999;
+  padding: 30px 24px;
+}
+.side-menu.open { left: 0; }
+
+/* vertical neon bar */
+.side-menu::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0;
+  width: 2px; height: 100%;
+  background: linear-gradient(to bottom, var(--blue), var(--yellow), transparent);
+  box-shadow: 0 0 10px var(--blue);
+}
+
+.menu-links { list-style: none; }
+.menu-links li { margin-bottom: 8px; }
+
+.menu-links a {
+  display: block;
+  color: var(--muted);
+  text-decoration: none;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 12px;
+  font-weight: 400;
+  letter-spacing: 3px;
+  padding: 10px 14px;
+  border: 1px solid transparent;
+  border-radius: 3px;
+  transition: all 0.25s;
+  position: relative;
+}
+
+.menu-links a::before {
+  content: '//';
+  color: var(--blue);
+  margin-right: 8px;
+  opacity: 0;
+  transition: opacity 0.25s;
+}
+
+.menu-links a:hover,
+.menu-links a.active {
+  color: var(--text);
+  border-color: rgba(0,212,255,0.2);
+  background: rgba(0,212,255,0.04);
+}
+.menu-links a:hover::before,
+.menu-links a.active::before { opacity: 1; }
+
+/* ══════════════════════════════════════════
+   HERO
+══════════════════════════════════════════ */
+.hero {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  padding: 100px 6% 120px;
+  overflow: hidden;
+  clip-path: polygon(0 0, 100% 0, 100% 90%, 65% 90%, 60% 100%, 40% 100%, 35% 90%, 0 90%);
+  margin-bottom: -50px;
+}
+
+.hero-bg {
+  position: absolute;
+  inset: 0;
+  width: 100%; height: 100%;
+  object-fit: cover;
+  z-index: 0;
+  opacity: 0.35;
+  filter: brightness(0.7) saturate(0.8);
+}
+
+/* Dark left fade */
+.hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(105deg,
+    rgba(6,8,12,0.97) 0%,
+    rgba(6,8,12,0.7) 45%,
+    rgba(6,8,12,0.1) 100%);
+  z-index: 1;
+}
+
+/* Blue tint bottom */
+.hero::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 200px;
+  background: linear-gradient(to top, rgba(0,212,255,0.04), transparent);
+  z-index: 1;
+  pointer-events: none;
+}
+
+.hero-content {
+  position: relative;
+  z-index: 3;
+  max-width: 740px;
+}
+
+/* Tech date line */
+.tech-line-wrap {
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.tech-date {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 10px;
+  color: var(--muted);
+  letter-spacing: 2px;
+}
+.tech-separator {
+  flex: 1;
+  max-width: 340px;
+  height: 1px;
+  background: linear-gradient(90deg, rgba(0,212,255,0.4), transparent);
+  box-shadow: 0 0 4px rgba(0,212,255,0.3);
+}
+
+/* Hero title */
+.hero-title {
+  font-family: 'Orbitron', sans-serif;
+  font-size: clamp(28px, 6vw, 64px);
+  font-weight: 900;
+  letter-spacing: 6px;
+  line-height: 1;
+  margin-bottom: 10px;
+  color: #fff;
+}
+
+/* Animated blue underline on title */
+.hero-title span {
+  display: inline-block;
+  position: relative;
+}
+.hero-title span::after {
+  content: '';
+  position: absolute;
+  bottom: -4px; left: 0;
+  width: 100%; height: 2px;
+  background: var(--blue);
+  box-shadow: 0 0 10px var(--blue), 0 0 30px rgba(0,212,255,0.4);
+  animation: titleGlow 2s ease-in-out infinite alternate;
+}
+@keyframes titleGlow {
+  from { opacity: 0.6; box-shadow: 0 0 6px var(--blue); }
+  to   { opacity: 1;   box-shadow: 0 0 14px var(--blue), 0 0 40px rgba(0,212,255,0.5); }
+}
+
+.hero-subtitle {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 11px;
+  color: var(--yellow);
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  margin-bottom: 24px;
+  text-shadow: 0 0 8px rgba(255,200,0,0.4);
+}
+
+.hero-paragraph {
+  font-size: 16px;
+  color: #9aaabb;
+  line-height: 1.75;
+  margin-bottom: 16px;
+  font-weight: 400;
+  max-width: 620px;
+}
+.hero-paragraph strong { color: var(--text); font-weight: 700; }
+
+/* CTA Button */
+.btn-primary {
+  display: inline-block;
+  position: relative;
+  z-index: 10;
+  background: var(--yellow);
+  color: #000;
+  padding: 13px 28px;
+  text-decoration: none;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  clip-path: polygon(6% 0, 100% 0, 100% 70%, 94% 100%, 0 100%, 0% 30%);
+  transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
+  margin-top: 12px;
+  box-shadow: 0 0 20px rgba(255,200,0,0.2);
+}
+.btn-primary:hover {
+  background: #fff;
+  transform: scale(1.03);
+  box-shadow: 0 0 30px rgba(255,200,0,0.4);
+}
+
+.btn-secondary {
+  display: inline-block;
+  position: relative;
+  z-index: 10;
+  background: transparent;
+  color: var(--blue);
+  padding: 13px 28px;
+  text-decoration: none;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  border: 1px solid rgba(0,212,255,0.5);
+  border-radius: 2px;
+  transition: background 0.2s, box-shadow 0.2s;
+  margin-top: 12px;
+  margin-left: 12px;
+}
+.btn-secondary:hover {
+  background: rgba(0,212,255,0.07);
+  box-shadow: 0 0 18px rgba(0,212,255,0.2);
+}
+
+/* Hero stat badges */
+.hero-stats {
+  display: flex;
+  gap: 24px;
+  margin-top: 32px;
+  flex-wrap: wrap;
+}
+.hero-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.hero-stat-num {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--blue);
+  text-shadow: 0 0 10px var(--blue);
+}
+.hero-stat-label {
+  font-size: 10px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.stat-sep {
+  width: 1px;
+  height: 40px;
+  background: rgba(0,212,255,0.2);
+  align-self: center;
+}
+
+/* ══════════════════════════════════════════
+   SECTION & CONTAINER
+══════════════════════════════════════════ */
+.container {
+  max-width: 1260px;
+  margin: 0 auto;
+  padding: 30px 24px 40px;
+}
+
+.section-label {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 10px;
+  letter-spacing: 4px;
+  color: var(--blue);
+  text-shadow: 0 0 8px rgba(0,212,255,0.4);
+  text-transform: uppercase;
+  margin-bottom: 10px;
+  display: block;
+}
+
+.section-title {
+  font-family: 'Orbitron', sans-serif;
+  font-size: clamp(18px, 3vw, 30px);
+  font-weight: 700;
+  letter-spacing: 3px;
+  margin-bottom: 8px;
+  color: var(--text);
+}
+
+.section-title .accent { color: var(--yellow); }
+
+.section-line {
+  width: 60px; height: 2px;
+  background: var(--blue);
+  box-shadow: 0 0 8px var(--blue);
+  margin-bottom: 36px;
+}
+
+/* ── GLOW DIVIDER ── */
+.glow-divider {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--blue), var(--yellow), transparent);
+  opacity: 0.3;
+  margin: 0;
+}
+
+/* ══════════════════════════════════════════
+   NEWS / CARDS GRID
+══════════════════════════════════════════ */
+.news-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 16px;
+}
+
+.featured-card {
+  grid-column: span 2;
+  display: flex;
+}
+.featured-card .card-image { flex: 1; }
+.featured-card .card-body  { flex: 1; }
+
+/* Card */
+.card {
+  background: var(--bg-card);
+  border: 1px solid rgba(0,212,255,0.08);
+  border-radius: 4px;
+  overflow: hidden;
+  transition: border-color 0.3s, box-shadow 0.3s, transform 0.3s;
+  position: relative;
+}
+
+/* Top accent bar on hover */
+.card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--blue), var(--yellow));
+  box-shadow: 0 0 8px var(--blue);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.35s;
+}
+.card:hover::before { transform: scaleX(1); }
+
+.card:hover {
+  border-color: rgba(0,212,255,0.4);
+  box-shadow: 0 6px 40px rgba(0,212,255,0.08);
+  transform: translateY(-4px);
+}
+
+.card-image img {
+  width: 100%;
+  height: 100%;
+  min-height: 160px;
+  max-height: 260px;
+  object-fit: cover;
+  display: block;
+  filter: brightness(0.85) saturate(0.9);
+  transition: filter 0.4s;
+}
+.card:hover .card-image img { filter: brightness(1) saturate(1.1); }
+
+.card-body { padding: 24px; }
+
+.category {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 9px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--blue);
+  display: block;
+  margin-bottom: 12px;
+}
+
+.card-body h2,
+.card-body h3 {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 1.35rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  margin-bottom: 14px;
+  line-height: 1.25;
+}
+
+.date {
+  font-size: 12px;
+  color: var(--blue);
+  letter-spacing: 1px;
+  display: block;
+  margin-bottom: 14px;
+  font-family: 'Orbitron', sans-serif;
+}
+
+.card-body p {
+  color: #8090a0;
+  font-size: 15px;
+  line-height: 1.7;
+  font-weight: 400;
+}
+
+/* CARD BUTTONS */
+.card-body .btn-primary { margin-top: 18px; }
+
+/* ══════════════════════════════════════════
+   TEAM STRIP
+══════════════════════════════════════════ */
+.team-strip {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1px;
+  background: var(--border);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  overflow: hidden;
+  margin-bottom: 30px;
+}
+
+.team-member {
+  background: var(--bg-card);
+  padding: 28px 22px;
+  transition: background 0.3s;
+}
+.team-member:hover { background: rgba(0,212,255,0.03); }
+
+.member-role {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 9px;
+  letter-spacing: 2px;
+  color: var(--yellow);
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+.member-name {
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  color: var(--text);
+  margin-bottom: 8px;
+}
+.member-desc {
+  font-size: 13px;
+  color: var(--muted);
+  line-height: 1.6;
+  font-weight: 400;
+}
+
+/* ══════════════════════════════════════════
+   FOOTER
+══════════════════════════════════════════ */
+.bottom-section {
+  width: 100%;
+  background: #000;
+  clip-path: polygon(0 8%, 35% 8%, 40% 0, 60% 0, 65% 8%, 100% 8%, 100% 100%, 0 100%);
+  margin-top: 60px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 90px 24px 40px;
+  border-top: none;
+  position: relative;
+}
+
+.bottom-section::before {
+  content: '';
+  position: absolute;
+  top: 8%; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--blue), var(--yellow), transparent);
+  box-shadow: 0 0 8px rgba(0,212,255,0.3);
+}
+
+.scroll-top {
+  color: var(--blue);
+  text-decoration: none;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 3px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  transition: color 0.3s, text-shadow 0.3s;
+}
+.scroll-top:hover {
+  color: #fff;
+  text-shadow: 0 0 8px var(--blue);
+}
+
+.dotted-separator {
+  color: #1e2630;
+  letter-spacing: 8px;
+  font-weight: 700;
+  margin: 22px 0;
+  user-select: none;
+}
+
+.follow-text {
+  font-family: 'Orbitron', sans-serif;
+  color: var(--muted);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 4px;
+  margin-bottom: 14px;
+}
+
+.social-container { display: flex; gap: 24px; }
+
+.social-link {
+  color: var(--muted);
+  transition: color 0.3s, transform 0.3s, filter 0.3s;
+  display: block;
+}
+.social-link svg {
+  width: 28px; height: 28px;
+  fill: currentColor;
+}
+.social-link:hover {
+  color: var(--yellow);
+  transform: translateY(-5px);
+  filter: drop-shadow(0 0 6px rgba(255,200,0,0.5));
+}
+
+.footer-bottom {
+  width: 90%;
+  max-width: 1260px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 36px;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.footer-logo {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.footer-logo img { height: 38px; width: auto; }
+.footer-logo span {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 4px;
+  color: var(--text);
+}
+
+.footer-copy {
+  font-size: 12px;
+  color: var(--muted);
+  letter-spacing: 1px;
+}
+
+/* ══════════════════════════════════════════
+   ANIMATIONS
+══════════════════════════════════════════ */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.fade-up { animation: fadeUp 0.7s ease both; }
+.d1 { animation-delay: 0.1s; }
+.d2 { animation-delay: 0.2s; }
+.d3 { animation-delay: 0.3s; }
+.d4 { animation-delay: 0.4s; }
+
+/* ══════════════════════════════════════════
+   RESPONSIVE
+══════════════════════════════════════════ */
+@media (max-width: 900px) {
+  .hero {
+    padding: 100px 6% 150px;
+    clip-path: polygon(0 0, 100% 0, 100% 92%, 70% 92%, 65% 100%, 35% 100%, 30% 92%, 0 92%);
+  }
+  .featured-card { grid-column: span 1; flex-direction: column; }
+  .hero-stats { gap: 16px; }
+  .stat-sep { display: none; }
+  .bottom-section { clip-path: polygon(0 5%, 30% 5%, 35% 0, 65% 0, 70% 5%, 100% 5%, 100% 100%, 0 100%); }
+  .footer-bottom { flex-direction: column; text-align: center; }
+}
+</style>
+</head>
+<body id="inicio">
+
+<!-- ═══════════ NAV ═══════════ -->
+<nav class="top-nav">
+  <button class="menu-btn" id="menuToggle" aria-label="Abrir menú">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </button>
+
+  <div class="logo">
+    <span class="logo-text">LAYER 8 GAMES</span>
+  </div>
+
+  <a href="#" class="login-link">
+    <img src="Iconologin.png" alt="Usuario" class="user-avatar">
+  </a>
+</nav>
+
+<!-- ═══════════ SIDE MENU ═══════════ -->
+<aside class="side-menu" id="sideMenu">
+  <ul class="menu-links">
+    <li><a href="index.html" class="active">INICIO</a></li>
+    <li><a href="Noticias/Noticias.html">NOTICIAS</a></li>
+    <li><a href="Juegos/Juegos.html">JUEGOS</a></li>
+    <li><a href="T&C/T&C.html">T&C</a></li>
+  </ul>
+</aside>
+
+<!-- ═══════════ HERO ═══════════ -->
+<header class="hero">
+  <img src="Banner1.jpeg" class="hero-bg" alt="Layer8Games Banner">
+
+  <div class="hero-content">
+
+    <div class="tech-line-wrap fade-up">
+      <span class="tech-date" id="current-date">: . : : . : --.--.---- : . : : . :</span>
+      <div class="tech-separator"></div>
+    </div>
+
+    <p class="hero-subtitle fade-up d1">Estudio Indie · México · Est. 2023</p>
+
+    <h1 class="hero-title fade-up d2">
+      <span>LAYER8</span>GAMES
+    </h1>
+
+    <p class="hero-paragraph fade-up d2">
+      Somos <strong>Layer 8 Games</strong>, un estudio de desarrollo de videojuegos <strong>INDIE</strong> con sede en México, fundado el 23 de febrero de 2023 por <strong>Proxell</strong> (Programador &amp; Fundador) y <strong>AdrianG.C</strong> (Modelador &amp; Diseñador Gráfico).
+    </p>
+
+    <p class="hero-paragraph fade-up d3">
+      Nuestra misión: crear experiencias de juego innovadoras que conecten con jugadores de todo el mundo. Apóyanos siguiéndonos en nuestras redes y únete a nuestra comunidad.
+    </p>
+
+    <div class="fade-up d3">
+      <a href="https://discord.gg/Bv2kGfJpZ" class="btn-primary">UNETE AL DISCORD</a>
+      <a href="Juegos/Juegos.html" class="btn-secondary">VER JUEGOS</a>
+    </div>
+
+    <div class="hero-stats fade-up d4">
+      <div class="hero-stat">
+        <span class="hero-stat-num">2023</span>
+        <span class="hero-stat-label">Fundación</span>
+      </div>
+      <div class="stat-sep"></div>
+      <div class="hero-stat">
+        <span class="hero-stat-num">Unity</span>
+        <span class="hero-stat-label">Motor</span>
+      </div>
+      <div class="stat-sep"></div>
+      <div class="hero-stat">
+        <span class="hero-stat-num">MX</span>
+        <span class="hero-stat-label">País</span>
+      </div>
+    </div>
+
+  </div>
+</header>
+
+<!-- ═══════════ MAIN CONTENT ═══════════ -->
+<main class="container">
+
+  <!-- Team strip -->
+  <span class="section-label">El Equipo</span>
+  <h2 class="section-title">DETRÁS DEL <span class="accent">CÓDIGO</span></h2>
+  <div class="section-line"></div>
+
+  <div class="team-strip">
+    <div class="team-member fade-up d1">
+      <div class="member-role">Fundador · Programador</div>
+      <div class="member-name">PROXELL</div>
+      <div class="member-desc">Arquitecto del código y visionario del estudio. Diseña las mecánicas y sistemas del juego en Unity.</div>
+    </div>
+    <div class="team-member fade-up d2">
+      <div class="member-role">Modelador · Diseñador Gráfico</div>
+      <div class="member-name">ADRIANG.C</div>
+      <div class="member-desc">Da vida visual a los mundos de Layer8. Responsable de modelos 3D, arte conceptual y UI.</div>
+    </div>
+    <div class="team-member fade-up d3">
+      <div class="member-role">Comunidad</div>
+      <div class="member-name">TÚ</div>
+      <div class="member-desc">Cada jugador que nos apoya forma parte del equipo. Únete a nuestra comunidad de Discord.</div>
+    </div>
+  </div>
+
+  <!-- News / Cards -->
+  <span class="section-label">Lo Último</span>
+  <h2 class="section-title">NOTICIAS Y <span class="accent">PROYECTOS</span></h2>
+  <div class="section-line"></div>
+
+  <div class="news-grid">
+
+    <article class="card featured-card fade-up d1">
+      <div class="card-image">
+        <img src="Layer8Gameslogo500x500.png" alt="Layer 8 Games Logo">
+      </div>
+      <div class="card-body">
+        <span class="category">Conocenos y explora nuestra web</span>
+        <h2>LAYER 8 GAMES Es un estudio de desarrollo de videojuegos Indie</h2>
+        <span class="date">1 days ago</span>
+        <p>
+          En Layer 8 Games, creemos que el código es solo el principio. Utilizando el motor Unity,
+          forjamos mundos inmersivos y mecánicas de alta precisión diseñadas para desafiar los límites
+          de la realidad digital. No solo desarrollamos videojuegos;
+          creamos experiencias interactivas que permanecen en la memoria de los jugadores.
+          Bienvenidos a la siguiente capa del entretenimiento.
+        </p>
+      </div>
+    </article>
+
+    <article class="card fade-up d2">
+      <div class="card-image">
+        <img src="LogoGameCenter.png" alt="Layer8 Game Center">
+      </div>
+      <div class="card-body">
+        <span class="category">Catálogo · Juegos</span>
+        <h3>LAYER8 GAME CENTER</h3>
+        <span class="date">1 day ago</span>
+        <p>Explora todos los títulos disponibles de Layer8Games, desde nuestros proyectos FPS experimentales hasta los más recientes lanzamientos.</p>
+        <a href="/Juegos/Juegos.html" class="btn-primary">Ver Catálogo</a>
+      </div>
+    </article>
+
+  </div>
+
+</main>
+
+<!-- ═══════════ FOOTER ═══════════ -->
+<footer class="bottom-section">
+
+  <a href="#inicio" class="scroll-top">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+      <polyline points="18 15 12 9 6 15"></polyline>
+    </svg>
+    VOLVER ARRIBA
+  </a>
+
+  <div class="dotted-separator">. . . . . . . . . . . . . . . . .</div>
+
+  <span class="follow-text">SÍGUENOS</span>
+
+  <div class="social-container">
+    <a href="https://www.youtube.com/@Devlayer8" target="_blank" class="social-link" aria-label="YouTube">
+      <svg viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+    </a>
+    <a href="https://discord.gg/Bv2kGfJpZ" target="_blank" class="social-link" aria-label="Discord">
+      <svg viewBox="0 0 24 24"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994a.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.028zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/></svg>
+    </a>
+    <a href="https://itch.io/" target="_blank" class="social-link" aria-label="Itch.io">
+      <svg viewBox="0 0 24 24"><path d="M4.04 4L2 6.645V18.17L3.606 20h16.788L22 18.171V6.646L19.96 4H4.04zm.968 2.05h13.984l1.101 1.442H3.907L5.008 6.05zm14.12 3.121c.583 0 1.06.476 1.06 1.059 0 .584-.477 1.061-1.06 1.061-.584 0-1.06-.477-1.06-1.061 0-.583.476-1.059 1.06-1.059zM4.872 9.171c.583 0 1.06.476 1.06 1.059 0 .584-.477 1.061-1.06 1.061-.584 0-1.06-.477-1.06-1.061 0-.583.476-1.059 1.06-1.059zm4.254 0c.584 0 1.06.476 1.06 1.059 0 .584-.476 1.061-1.06 1.061-.584 0-1.061-.477-1.061-1.061 0-.583.477-1.059 1.061-1.059zm5.748 0c.583 0 1.06.476 1.06 1.059 0 .584-.477 1.061-1.06 1.061-.583 0-1.06-.477-1.06-1.061 0-.583.477-1.059 1.06-1.059zm-7.904 2.872h10.06v5.856H6.97v-5.856zM8.384 13.5v1.444h1.417V13.5H8.384zm4.4 0v1.444h1.416V13.5h-1.416z"/></svg>
+    </a>
+  </div>
+
+  <div class="dotted-separator">. . . . . . . . . . . . . . . . .</div>
+
+  <div class="footer-bottom">
+    <div class="footer-logo">
+      <img src="Layer8Gameslogo500x500.png" alt="Layer 8 Games Logo">
+      <span>LAYER 8 GAMES</span>
+    </div>
+    <p class="footer-copy">© 2026 Layer8Games · Hecho en México 🇲🇽</p>
+  </div>
+
+</footer>
+
+<!-- ═══════════ SCRIPTS ═══════════ -->
+<script>
+  // Side menu toggle
+  const menuBtn = document.getElementById('menuToggle');
+  const sideMenu = document.getElementById('sideMenu');
+  menuBtn.addEventListener('click', () => {
+    sideMenu.classList.toggle('open');
+  });
+  // Close menu clicking outside
+  document.addEventListener('click', (e) => {
+    if (!sideMenu.contains(e.target) && !menuBtn.contains(e.target)) {
+      sideMenu.classList.remove('open');
+    }
+  });
+
+  // Tech date
+  function updateTechDate() {
+    const now = new Date();
+    const d = String(now.getDate()).padStart(2,'0');
+    const m = String(now.getMonth()+1).padStart(2,'0');
+    const y = now.getFullYear();
+    document.getElementById('current-date').textContent = `: . : : . : ${d}.${m}.${y} : . : : . :`;
+  }
+  updateTechDate();
+
+  // Click glow effect
+  document.addEventListener('click', function(e) {
+    const glow = document.createElement('div');
+    glow.className = 'click-glow';
+    glow.style.left = e.clientX + 'px';
+    glow.style.top  = e.clientY + 'px';
+    document.body.appendChild(glow);
+    setTimeout(() => glow.remove(), 600);
+  });
+</script>
+
+</body>
+</html>
