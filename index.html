@@ -15,497 +15,650 @@
     <meta property="og:image" content="https://layer8games.de/layer8gameslogooriginal.jpeg">
     <meta property="og:url" content="https://layer8games.de/">
     <meta property="og:type" content="website">
-    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;600;700&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
     <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.4.0/model-viewer.min.js"></script>
-  </head>
+
     <style>
-        /* --- VARIABLES GLOBALES --- */
-        :root {
-            --bg-dark: #070b0e;       
-            --card-bg: #11161b;      
-            --accent-blue: #00d4ff;  
-            --accent-yellow: #ffc800; 
-            --text-main: #ffffff;
-            --text-muted: #94a3b8;   
-            --border-color: #1e262e;
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            background-color: var(--bg-dark);
-            color: var(--text-main);
-            font-family: 'Rajdhani', sans-serif;
-            line-height: 1.5;
-            overflow-x: hidden; /* Evita scroll horizontal por el menú */
-        }
-
-        /* --- BARRA DE NAVEGACIÓN SUPERIOR --- */
-        .top-nav {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background-color: #000000;
-            padding: 10px 20px;
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-            border-bottom: 1px solid #222;
-        }
-
-        .menu-btn {
-            background: transparent;
-            border: none;
-            color: var(--text-main);
-            cursor: pointer;
-            padding: 5px;
-        }
-
-        .logo-text {
-            font-size: 1.2rem;
-            font-weight: 700;
-            letter-spacing: 3px;
-            color: var(--text-main);
-        }
-
-        .user-avatar {
-            width: 35px;
-            height: 35px;
-            border-radius: 50%; /* Hace que la imagen sea circular */
-            border: 2px solid transparent;
-            transition: border 0.3s;
-            object-fit: cover;
-        }
-
-        .user-avatar:hover {
-            border-color: var(--accent-blue);
-        }
-
-        /* --- MENÚ LATERAL --- */
-        .side-menu {
-            position: fixed;
-            top: 57px; /* Altura aproximada de la barra superior */
-            left: -250px; /* Oculto fuera de la pantalla por defecto */
-            width: 250px;
-            height: calc(100vh - 57px);
-            background-color: #0a0d10;
-            border-right: 1px solid var(--border-color);
-            transition: left 0.3s ease-in-out;
-            z-index: 999;
-            padding: 20px;
-        }
-
-        .side-menu.open {
-            left: 0;
-        }
-
-        .menu-links {
-            list-style: none;
-        }
-
-        .menu-links li {
-            margin-bottom: 15px;
-        }
-
-        .menu-links a {
-            color: var(--text-main);
-            text-decoration: none;
-            font-size: 1.2rem;
-            font-weight: 600;
-            letter-spacing: 1px;
-            transition: color 0.2s;
-        }
-
-        .menu-links a:hover {
-            color: var(--accent-blue);
-        }
-
-        /* --- HERO SECTION --- */
-        .hero-section {
-            position: relative;
-            min-height: 100vh;
-            display: flex;
-            align-items: center; /* Centrado vertical mejorado */
-            padding: 100px 5%;
-            /* Mantenemos tu corte geométrico */
-            clip-path: polygon(0 0, 100% 0, 100% 90%, 65% 90%, 60% 100%, 40% 100%, 35% 90%, 0 90%);
-            margin-bottom: -50px;
-            overflow: hidden;
-            background-color: #000; /* Fondo negro de seguridad */
-        }
-
-        /* La imagen de fondo con los cuadros */
-        .hero-bg {
-            position: absolute;
-            top: -10%;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            /* IMPORTANTE: Enviamos la imagen al fondo total */
-            z-index: 1; 
-            /* Bajamos la opacidad para que los cuadros no molesten al texto */
-            opacity: 0.4; 
-            /* Opcional: un ligero desenfoque ayuda a que el texto resalte */
-            filter: brightness(0.8);
-        }
-
-        /* El gradiente oscuro para legibilidad */
-        .hero-section::before {
-            content: "";
-            position: absolute;
-            inset: 0;
-            background: linear-gradient(to right,
-                rgba(0,0,0,0.9) 0%,
-                rgba(0,0,0,0.6) 40%,
-                rgba(0,0,0,0) 100%);
-            /* El gradiente debe estar sobre la imagen pero bajo el texto */
-            z-index: 2; 
-        }
-
-        /* El contenedor del texto */
-        .hero-content {
-            position: relative;
-            /* El texto debe estar arriba de todo */
-            z-index: 3; 
-            max-width: 800px;
-        }
-
-        /* Estilos extra para que el texto se vea pro */
-        .hero-content h1 {
-            font-size: clamp(2rem, 8vw, 5rem);
-            margin: 20px 0;
-            color: #fff;
-            letter-spacing: 5px;
-        }
-
-        .hero-content p {
-            color: #ccc;
-            line-height: 1.6;
-            margin-bottom: 15px;
-        }
-        
-        /* --- ESTILOS DE TEXTO DEL HERO --- */
-        .tech-detail {
-            margin-bottom: 25px;
-        }
-
-        .tech-detail span {
-            color: #4a5568; /* Un gris sutil para que no resalte demasiado */
-            font-family: monospace;
-            font-size: 0.9rem;
-            letter-spacing: 2px;
-        }
-
-        .tech-line {
-            border: none;
-            height: 1px;
-            background: linear-gradient(to right, #4a5568, transparent);
-            margin-top: 8px;
-            width: 100%;
-            max-width: 450px;
-        }
-
-        .hero-title {
-            font-size: 3.5rem;
-            font-weight: 400; 
-            letter-spacing: 8px;
-            margin-bottom: 25px;
-            color: #ffffff;
-        }
-
-        .hero-paragraph {
-            font-size: 1.05rem;
-            color: #cbd5e1;
-            margin-bottom: 20px; 
-            line-height: 1.6;
-        }
-
-        /* BOTÓN AMARILLO */
-        .btn-primary {
-            position: relative; /* 1. OBLIGATORIO para que z-index funcione */
-            z-index: 100;      /* 2. Un número alto para que nada lo tape */
-            
-            display: inline-block;
-            background-color: var(--accent-yellow);
-            color: #000;
-            padding: 12px 25px;
-            text-decoration: none;
-            font-weight: 700;
-            letter-spacing: 2px;
-            /* Tu corte geométrico estilo Halo */
-            clip-path: polygon(5% 0, 100% 0, 100% 70%, 95% 100%, 0 100%, 0% 30%);
-            transition: all 0.2s;
-            margin-top: 10px;
-        }
-
-        .btn-primary:hover {
-            background-color: #fff;
-            transform: scale(1.02);
-        }
-
-        /* --- GRID LAYOUT --- */
-        .container {
-            max-width: 1300px;
-            margin: 40px auto;
-            padding: 0 20px;
-        }
-
-        .news-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 20px;
-        }
-
-        .featured-card {
-            grid-column: span 2;
-            display: flex;
-        }
-
-        .featured-card .card-image {
-            flex: 1;
-        }
-
-        .featured-card .card-body {
-            flex: 1;
-        }
-
-        /* --- TARJETAS --- */
-        .card {
-            background-color: var(--card-bg);
-            border: 1px solid var(--border-color);
-            overflow: hidden;
-            transition: border 0.3s ease;
-        }
-
-        .card:hover {
-            border-color: var(--accent-blue);
-        }
-
-        .card-image img {
-            border: 2px solid var(--bg-dark); /* Borde oscuro para destacar la imagen */
-            border-radius: 4px; /* Opcional: un toque redondeado */
-            width: 100%;
-            height: 100%;
-            min-height: 250px;
-            object-fit: cover;
-            display: block;
-        }
-
-        .card-body {
-            padding: 25px;
-        }
-
-        .category {
-            font-size: 0.8rem;
-            color: var(--text-muted);
-            letter-spacing: 1px;
-            display: block;
-            margin-bottom: 12px;
-        }
-
-        .card-body h2 {
-            font-size: 1.4rem;
-            margin-bottom: 15px;
-            font-weight: 600;
-            line-height: 1.2;
-        }
-
-        .date {
-            font-size: 0.9rem;
-            color: var(--accent-blue);
-            display: block;
-            margin-bottom: 15px;
-        }
-
-        .card-body p {
-            color: #cbd5e1;
-            font-size: 1rem;
-        }
-
-        /* --- AJUSTES PARA EL FOOTER Y SCROLL SUAVE --- */
-        html {
-            scroll-behavior: smooth;
-        }
-
-        .bottom-section {
-            width: 100%;
-            background-color: #000000;
-            /* Corte invertido al del hero, la pestaña apunta hacia arriba */
-            clip-path: polygon(0 8%, 35% 8%, 40% 0, 60% 0, 65% 8%, 100% 8%, 100% 100%, 0 100%);
-            margin-top: 60px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding-top: 100px;
-            padding-bottom: 40px;
-        }
-
-        .scroll-top {
-            color: var(--accent-blue);
-            text-decoration: none;
-            font-size: 0.85rem;
-            font-weight: 700;
-            letter-spacing: 2px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 5px;
-            transition: color 0.3s;
-        }
-
-        .scroll-top:hover {
-            color: #ffffff;
-        }
-
-        .dotted-separator {
-            color: #4a5568;
-            letter-spacing: 8px;
-            font-weight: 700;
-            margin: 25px 0;
-            user-select: none;
-        }
-
-        .follow-text {
-            color: var(--text-muted);
-            font-size: 0.9rem;
-            font-weight: 700;
-            letter-spacing: 3px;
-            margin-bottom: 10px;
-        }
-
-        .social-container {
-            display: flex;
-            gap: 30px;
-        }
-
-        .social-link {
-            color: #ffffff;
-            transition: all 0.3s ease;
-            display: block;
-        }
-
-        .social-link svg {
-            width: 30px;
-            height: 30px;
-            fill: currentColor;
-        }
-
-        .social-link:hover {
-            color: var(--accent-yellow);
-            transform: translateY(-5px);
-        }
-
-        .footer-bottom {
-            width: 90%;
-            max-width: 1300px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-top: 40px;
-        }
-
-        .footer-logo {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .footer-logo img {
-            height: 40px;
-            width: auto;
-        }
-
-        .footer-logo span {
-            color: #ffffff;
-            font-size: 1.1rem;
-            font-weight: 700;
-            letter-spacing: 3px;
-        }
-
-        /* Ajustes Responsivos para móviles */
-        @media (max-width: 900px) {
-            .hero-section {
-                /* CORRECCIÓN: Aumentamos el padding inferior a 150px para salvar el botón */
-                padding: 120px 5% 150px 5%; 
-                min-height: auto;
-                clip-path: polygon(0 0, 100% 0, 100% 90%, 70% 90%, 65% 100%, 35% 100%, 30% 90%, 0 90%);
-            }
-            .hero-title {
-                font-size: 2.2rem;
-                letter-spacing: 4px;
-            }
-            .featured-card {
-                grid-column: span 1;
-                flex-direction: column;
-            }
-            
-            /* Ajustes responsivos para el nuevo footer */
-            .bottom-section {
-                clip-path: polygon(0 5%, 30% 5%, 35% 0, 65% 0, 70% 5%, 100% 5%, 100% 100%, 0 100%);
-                padding-top: 80px;
-            }
-            .footer-bottom {
-                flex-direction: column;
-                gap: 20px;
-            }
-        }
-        /* EFECTO GLOW AL HACER CLICK */
-
-        .click-glow{
-
-            position: fixed;
-
-            width: 20px;
-            height: 20px;
-
-            border-radius: 50%;
-
-            background: radial-gradient(
-                circle,
-                rgba(0,212,255,0.9) 0%,
-                rgba(0,212,255,0.4) 40%,
-                transparent 70%
-            );
-
-            transform: translate(-50%, -50%);
-
-            animation: clickGlowAnim 0.6s ease-out forwards;
-
-            pointer-events: none;
-
-            z-index: 9999;
-
-        }
-
-        /* ANIMACION */
-
-        @keyframes clickGlowAnim{
-
-            0%{
-                transform: translate(-50%, -50%) scale(0.3);
-                opacity: 1;
-            }
-
-            70%{
-                transform: translate(-50%, -50%) scale(3);
-                opacity: 0.6;
-            }
-
-            100%{
-                transform: translate(-50%, -50%) scale(4);
-                opacity: 0;
-            }
-
-        }
-
+/* =============================================
+   LAYER8GAMES — MAIN STYLESHEET
+   Theme: Gamer Neon / Cyberpunk Tactical
+   ============================================= */
+
+:root {
+  --bg:        #06080c;
+  --bg-card:   #0d1117;
+  --bg-nav:    rgba(6,8,12,0.96);
+  --blue:      #00d4ff;
+  --yellow:    #ffc800;
+  --red:       #ff3c3c;
+  --text:      #e8eaf0;
+  --muted:     #4a5568;
+  --border:    rgba(0,212,255,0.12);
+  --bg-dark:       #06080c;
+  --card-bg:       #0d1117;
+  --accent-blue:   #00d4ff;
+  --accent-yellow: #ffc800;
+  --text-main:     #e8eaf0;
+  --text-muted:    #4a5568;
+  --border-color:  rgba(0,212,255,0.12);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Rajdhani', sans-serif;
+  line-height: 1.5;
+  overflow-x: hidden;
+  cursor: crosshair;
+}
+
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0,0,0,0.08) 2px,
+    rgba(0,0,0,0.08) 4px
+  );
+  pointer-events: none;
+  z-index: 9998;
+}
+
+.click-glow {
+  position: fixed;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(0,212,255,0.9) 0%, rgba(0,212,255,0.4) 40%, transparent 70%);
+  transform: translate(-50%, -50%);
+  animation: clickGlowAnim 0.6s ease-out forwards;
+  pointer-events: none;
+  z-index: 9999;
+}
+@keyframes clickGlowAnim {
+  0%   { transform: translate(-50%,-50%) scale(0.3); opacity: 1; }
+  70%  { transform: translate(-50%,-50%) scale(3);   opacity: 0.6; }
+  100% { transform: translate(-50%,-50%) scale(4);   opacity: 0; }
+}
+
+.top-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #000000;
+  border-bottom: 1px solid #1a1a1a;
+  padding: 0 24px;
+  height: 58px;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+.top-nav::before {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0;
+  width: 120px; height: 2px;
+  background: linear-gradient(90deg, var(--blue), transparent);
+  box-shadow: 0 0 8px var(--blue);
+}
+.top-nav::after {
+  content: '';
+  position: absolute;
+  bottom: 0; right: 0;
+  width: 80px; height: 2px;
+  background: linear-gradient(270deg, var(--yellow), transparent);
+  box-shadow: 0 0 8px var(--yellow);
+}
+
+.menu-btn {
+  background: transparent;
+  border: 1px solid rgba(0,212,255,0.2);
+  border-radius: 4px;
+  color: var(--text);
+  cursor: pointer;
+  padding: 6px 8px;
+  transition: border-color 0.3s, background 0.3s;
+  display: flex;
+  align-items: center;
+}
+.menu-btn:hover {
+  border-color: var(--blue);
+  background: rgba(0,212,255,0.07);
+}
+
+.logo-text {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 4px;
+  color: var(--blue);
+  text-shadow: 0 0 12px var(--blue);
+}
+
+.user-avatar {
+  width: 34px; height: 34px;
+  border-radius: 50%;
+  border: 1px solid rgba(0,212,255,0.3);
+  object-fit: cover;
+  transition: border-color 0.3s, box-shadow 0.3s;
+  cursor: pointer;
+}
+.user-avatar:hover {
+  border-color: var(--blue);
+  box-shadow: 0 0 12px rgba(0,212,255,0.4);
+}
+
+.side-menu {
+  position: fixed;
+  top: 57px;
+  left: -250px;
+  width: 250px;
+  height: calc(100vh - 57px);
+  background-color: #0a0d10;
+  border-right: 1px solid var(--border-color);
+  transition: left 0.3s ease-in-out;
+  z-index: 999;
+  padding: 20px;
+}
+.side-menu.open { left: 0; }
+.menu-links { list-style: none; }
+.menu-links li { margin-bottom: 15px; }
+.menu-links a {
+  color: var(--text-main);
+  text-decoration: none;
+  font-size: 1.2rem;
+  font-weight: 600;
+  letter-spacing: 1px;
+  transition: color 0.2s;
+}
+.menu-links a:hover { color: var(--accent-blue); }
+
+.hero-section {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  padding: 100px 6% 120px;
+  overflow: hidden;
+  clip-path: polygon(0 0, 100% 0, 100% 90%, 65% 90%, 60% 100%, 40% 100%, 35% 90%, 0 90%);
+  margin-bottom: -50px;
+  background: #000;
+}
+.hero-bg {
+  position: absolute;
+  inset: 0;
+  width: 100%; height: 100%;
+  object-fit: cover;
+  z-index: 0;
+  opacity: 0.35;
+  filter: brightness(0.7) saturate(0.8);
+}
+.hero-section::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(105deg,
+    rgba(6,8,12,0.97) 0%,
+    rgba(6,8,12,0.7) 45%,
+    rgba(6,8,12,0.1) 100%);
+  z-index: 1;
+}
+.hero-section::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 200px;
+  background: linear-gradient(to top, rgba(0,212,255,0.04), transparent);
+  z-index: 1;
+  pointer-events: none;
+}
+.hero-content {
+  position: relative;
+  z-index: 3;
+  max-width: 800px;
+}
+.tech-detail {
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.tech-detail span {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 10px;
+  color: var(--muted);
+  letter-spacing: 2px;
+}
+.tech-line {
+  flex: 1;
+  max-width: 340px;
+  border: none;
+  height: 1px;
+  background: linear-gradient(90deg, rgba(0,212,255,0.4), transparent);
+  box-shadow: 0 0 4px rgba(0,212,255,0.3);
+  margin-top: 0;
+}
+.hero-title {
+  font-family: 'Orbitron', sans-serif;
+  font-size: clamp(28px, 6vw, 64px);
+  font-weight: 900;
+  letter-spacing: 6px;
+  line-height: 1;
+  margin-bottom: 24px;
+  color: #fff;
+}
+.hero-title span {
+  display: inline-block;
+  position: relative;
+}
+.hero-title span::after {
+  content: '';
+  position: absolute;
+  bottom: -4px; left: 0;
+  width: 100%; height: 2px;
+  background: var(--blue);
+  box-shadow: 0 0 10px var(--blue), 0 0 30px rgba(0,212,255,0.4);
+  animation: titleGlow 2s ease-in-out infinite alternate;
+}
+@keyframes titleGlow {
+  from { opacity: 0.6; box-shadow: 0 0 6px var(--blue); }
+  to   { opacity: 1;   box-shadow: 0 0 14px var(--blue), 0 0 40px rgba(0,212,255,0.5); }
+}
+.hero-paragraph {
+  font-size: 16px;
+  color: #9aaabb;
+  line-height: 1.75;
+  margin-bottom: 16px;
+  font-weight: 400;
+  max-width: 620px;
+}
+.hero-paragraph strong { color: var(--text); font-weight: 700; }
+
+.btn-primary {
+  display: inline-block;
+  position: relative;
+  z-index: 10;
+  background: var(--yellow);
+  color: #000;
+  padding: 13px 28px;
+  text-decoration: none;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  clip-path: polygon(6% 0, 100% 0, 100% 70%, 94% 100%, 0 100%, 0% 30%);
+  transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
+  margin-top: 12px;
+  box-shadow: 0 0 20px rgba(255,200,0,0.2);
+  border: none;
+  cursor: pointer;
+}
+.btn-primary:hover {
+  background: #fff;
+  transform: scale(1.03);
+  box-shadow: 0 0 30px rgba(255,200,0,0.4);
+}
+
+.container {
+  max-width: 1300px;
+  margin: 40px auto;
+  padding: 30px 24px 40px;
+}
+.news-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 20px;
+}
+.featured-card {
+  grid-column: span 2;
+  display: flex;
+}
+.featured-card .card-image { flex: 1; }
+.featured-card .card-body  { flex: 1; }
+.card {
+  background-color: var(--card-bg);
+  border: 1px solid var(--border-color);
+  overflow: hidden;
+  transition: border 0.3s ease;
+}
+.card:hover { border-color: var(--accent-blue); }
+.card-image img {
+  border: 2px solid var(--bg-dark);
+  border-radius: 4px;
+  width: 100%;
+  height: 100%;
+  min-height: 250px;
+  object-fit: cover;
+  display: block;
+}
+.card-body { padding: 25px; }
+.category {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  letter-spacing: 1px;
+  display: block;
+  margin-bottom: 12px;
+}
+.card-body h2, .card-body h3 {
+  font-size: 1.4rem;
+  margin-bottom: 15px;
+  font-weight: 600;
+  line-height: 1.2;
+}
+.date {
+  font-size: 0.9rem;
+  color: var(--accent-blue);
+  display: block;
+  margin-bottom: 15px;
+}
+.card-body p { color: #cbd5e1; font-size: 1rem; }
+.card-body .btn-primary { margin-top: 10px; }
+
+.bottom-section {
+  width: 100%;
+  background: #000;
+  clip-path: polygon(0 8%, 35% 8%, 40% 0, 60% 0, 65% 8%, 100% 8%, 100% 100%, 0 100%);
+  margin-top: 60px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 90px 24px 40px;
+  position: relative;
+}
+.bottom-section::before {
+  content: '';
+  position: absolute;
+  top: 8%; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--blue), var(--yellow), transparent);
+  box-shadow: 0 0 8px rgba(0,212,255,0.3);
+}
+.scroll-top {
+  color: var(--blue);
+  text-decoration: none;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 3px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  transition: color 0.3s, text-shadow 0.3s;
+}
+.scroll-top:hover { color: #fff; text-shadow: 0 0 8px var(--blue); }
+.dotted-separator {
+  color: #1e2630;
+  letter-spacing: 8px;
+  font-weight: 700;
+  margin: 22px 0;
+  user-select: none;
+}
+.follow-text {
+  font-family: 'Orbitron', sans-serif;
+  color: var(--muted);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 4px;
+  margin-bottom: 14px;
+}
+.social-container { display: flex; gap: 24px; }
+.social-link {
+  color: var(--muted);
+  transition: color 0.3s, transform 0.3s, filter 0.3s;
+  display: block;
+}
+.social-link svg { width: 28px; height: 28px; fill: currentColor; }
+.social-link:hover {
+  color: var(--yellow);
+  transform: translateY(-5px);
+  filter: drop-shadow(0 0 6px rgba(255,200,0,0.5));
+}
+.footer-bottom {
+  width: 90%;
+  max-width: 1300px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 36px;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+.footer-logo { display: flex; align-items: center; gap: 14px; }
+.footer-logo img { height: 38px; width: auto; }
+.footer-logo span {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 4px;
+  color: var(--text);
+}
+
+/* ══════════════════════════════════════════
+   MODAL DE AUTH
+══════════════════════════════════════════ */
+.auth-modal {
+  display: none;
+  position: fixed;
+  z-index: 2000;
+  inset: 0;
+  background: rgba(0,0,0,0.92);
+  backdrop-filter: blur(6px);
+  align-items: center;
+  justify-content: center;
+}
+.auth-modal.active { display: flex; }
+
+.auth-content {
+  background: var(--bg-card);
+  border: 1px solid var(--blue);
+  padding: 40px;
+  width: 90%;
+  max-width: 420px;
+  position: relative;
+  box-shadow: 0 0 40px rgba(0,212,255,0.15);
+}
+/* Esquina decorativa */
+.auth-content::before {
+  content: '';
+  position: absolute;
+  top: 0; right: 0;
+  width: 0; height: 0;
+  border-top: 28px solid rgba(0,212,255,0.2);
+  border-left: 28px solid transparent;
+}
+
+.auth-header {
+  margin-bottom: 28px;
+}
+.auth-header .auth-label {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 9px;
+  letter-spacing: 3px;
+  color: var(--muted);
+  display: block;
+  margin-bottom: 6px;
+}
+.auth-header h2 {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: 3px;
+  color: var(--blue);
+  text-shadow: 0 0 10px rgba(0,212,255,0.4);
+}
+
+.auth-content input {
+  width: 100%;
+  background: #000;
+  border: 1px solid var(--muted);
+  border-left: 3px solid rgba(0,212,255,0.3);
+  color: var(--blue);
+  padding: 12px 14px;
+  margin-top: 12px;
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 14px;
+  letter-spacing: 1px;
+  transition: border-color 0.3s;
+}
+.auth-content input::placeholder { color: var(--muted); }
+.auth-content input:focus {
+  border-color: var(--yellow);
+  border-left-color: var(--yellow);
+  outline: none;
+}
+
+.auth-divider {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(0,212,255,0.2), transparent);
+  margin: 20px 0;
+}
+
+.auth-switch {
+  margin-top: 16px;
+  font-size: 12px;
+  color: var(--muted);
+  text-align: center;
+  letter-spacing: 1px;
+}
+.auth-switch span {
+  color: var(--yellow);
+  cursor: pointer;
+  text-decoration: underline;
+  transition: color 0.2s;
+}
+.auth-switch span:hover { color: #fff; }
+
+.close-modal {
+  position: absolute;
+  top: 12px; right: 18px;
+  color: var(--red);
+  font-size: 26px;
+  cursor: pointer;
+  line-height: 1;
+  transition: color 0.2s, transform 0.2s;
+  background: none;
+  border: none;
+}
+.close-modal:hover { color: #fff; transform: rotate(90deg); }
+
+/* Panel de usuario logueado */
+.user-panel {
+  padding: 0;
+}
+.user-panel-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+.user-panel-avatar {
+  width: 52px; height: 52px;
+  border-radius: 50%;
+  border: 2px solid var(--yellow);
+  box-shadow: 0 0 12px rgba(255,200,0,0.3);
+  object-fit: cover;
+}
+.user-panel-info { display: flex; flex-direction: column; gap: 3px; }
+.user-panel-name {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--yellow);
+  letter-spacing: 2px;
+}
+.user-panel-email {
+  font-size: 12px;
+  color: var(--muted);
+  letter-spacing: 1px;
+}
+.user-panel-status {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 9px;
+  letter-spacing: 2px;
+  color: #2ecc71;
+  margin-bottom: 20px;
+}
+.user-panel-status::before {
+  content: '';
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  background: #2ecc71;
+  box-shadow: 0 0 6px #2ecc71;
+  animation: statusPulse 2s ease-in-out infinite;
+}
+@keyframes statusPulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+.btn-logout {
+  width: 100%;
+  background: transparent;
+  border: 1px solid rgba(255,60,60,0.4);
+  color: var(--red);
+  padding: 11px;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s;
+  margin-top: 8px;
+}
+.btn-logout:hover {
+  background: rgba(255,60,60,0.1);
+  border-color: var(--red);
+}
+
+.auth-error {
+  background: rgba(255,60,60,0.08);
+  border: 1px solid rgba(255,60,60,0.3);
+  border-left: 3px solid var(--red);
+  color: #ff8080;
+  font-size: 12px;
+  padding: 10px 14px;
+  margin-top: 12px;
+  display: none;
+  letter-spacing: 0.5px;
+}
+.auth-error.show { display: block; }
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.fade-up { animation: fadeUp 0.7s ease both; }
+.d1 { animation-delay: 0.1s; }
+.d2 { animation-delay: 0.2s; }
+.d3 { animation-delay: 0.3s; }
+.d4 { animation-delay: 0.4s; }
+
+@media (max-width: 900px) {
+  .hero-section {
+    padding: 120px 6% 150px;
+    clip-path: polygon(0 0, 100% 0, 100% 90%, 70% 90%, 65% 100%, 35% 100%, 30% 90%, 0 90%);
+    min-height: auto;
+  }
+  .hero-title { font-size: clamp(22px, 8vw, 40px); letter-spacing: 4px; }
+  .featured-card { grid-column: span 1; flex-direction: column; }
+  .bottom-section {
+    clip-path: polygon(0 5%, 30% 5%, 35% 0, 65% 0, 70% 5%, 100% 5%, 100% 100%, 0 100%);
+    padding-top: 80px;
+  }
+  .footer-bottom { flex-direction: column; text-align: center; }
+}
     </style>
-</head>
-<body id="inicio">
+  </head>
+  <body id="inicio">
 
     <nav class="top-nav">
         <button class="menu-btn" id="menuToggle" aria-label="Abrir menú">
@@ -520,8 +673,8 @@
             <span class="logo-text">LAYER 8 GAMES</span>
         </div>
 
-        <a href="#" class="login-link">
-            <img src="Iconologin.png" alt="Usuario" class="user-avatar">
+        <a href="#" class="login-link" id="loginTrigger">
+            <img src="Iconologin.png" alt="Usuario" class="user-avatar" id="userAvatar">
         </a>
     </nav>
 
@@ -530,32 +683,28 @@
             <li><a href="index.html" class="active">INICIO</a></li>
             <li><a href="Noticias/Noticias.html">NOTICIAS</a></li>
             <li><a href="Juegos/Juegos.html">JUEGOS</a></li>
-            <li><a href= "T&C/T&C.html">T&C</a></li>
+            <li><a href="T&C/T&C.html">T&C</a></li>
         </ul>
     </aside>
 
     <header class="hero-section">
         <img src="Banner1.jpeg" class="hero-bg" alt="Marine Background">
-
         <div class="hero-content">
-            
             <div class="tech-detail">
                 <span id="current-date">: . : : . : --.--.---- : . : : . :</span>
                 <hr class="tech-line">
             </div>
-            
-            <h1 class="hero-title">LAYER8GAMES</h1>
-            
+            <h1 class="hero-title fade-up d2">
+                <span>LAYER8</span>GAMES
+            </h1>
             <p class="hero-paragraph">
                 Somos <strong>Layer 8 Games</strong>, un studio de desarrollo de videojuegos <strong>INDIE</strong> con sede en México, fundado el 23 de febrero de 2023 por <strong>Proxell</strong>.Programador y fundador, y en el equipo como Modelador y diseñador grafico <strong>AdrianG.C</strong> Nuestra misión es crear experiencias de juego innovadoras y emocionantes que conecten con jugadores de todo el mundo.
             </p>
-            
             <p class="hero-paragraph">
                 Nos hemos enfocado en construir un equipo talentoso y apasionado, así como en desarrollar proyectos que reflejen nuestra visión creativa. Estamos comprometidos con la calidad y la innovación, y estamos emocionados por lo que el futuro nos depara.
                 <br><br>
                 Apoyanos a crecer y ser parte de esta aventura siguiéndonos en nuestras redes sociales y visitando nuestro Community Hub para estar al tanto de todas las novedades, eventos y oportunidades de colaboración.
             </p>
-            
             <a href="https://discord.gg/SMY6A3dMk3" class="btn-primary">UNETE A NUESTRA COMUNIDAD DE DISCORD</a>
         </div>
     </header>
@@ -564,7 +713,6 @@
 
     <main class="container">
         <div class="news-grid">
-            
             <article class="card featured-card">
                 <div class="card-image main-img">
                     <img src="Layer8Gameslogo500x500.png" alt="Layer 8 Games Logo">
@@ -582,7 +730,6 @@
                     </p>
                 </div>
             </article>
-
             <article class="card secondary-card">
                 <div class="card-image">
                     <img src="LogoGameCenter.png" alt="LogoLayer8Games GAME CENTER">
@@ -594,23 +741,18 @@
                     <a href="/Juegos/Juegos.html" class="btn-primary">Ver Catalogo de Juegos</a>
                 </div>
             </article>
-
         </div>
     </main>
 
     <footer class="bottom-section">
-        
         <a href="#inicio" class="scroll-top">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <polyline points="18 15 12 9 6 15"></polyline>
             </svg>
             VOLVER ARRIBA
         </a>
-
         <div class="dotted-separator">. . . . . . . . . . . . . . .</div>
-
         <span class="follow-text">SÍGUENOS</span>
-
         <div class="social-container">
             <a href="https://www.youtube.com/@Devlayer8" target="_blank" class="social-link" aria-label="YouTube">
                 <svg viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
@@ -622,9 +764,7 @@
                 <svg viewBox="0 0 24 24"><path d="M4.04 4L2 6.645V18.17L3.606 20h16.788L22 18.171V6.646L19.96 4H4.04zm.968 2.05h13.984l1.101 1.442H3.907L5.008 6.05zm14.12 3.121c.583 0 1.06.476 1.06 1.059 0 .584-.477 1.061-1.06 1.061-.584 0-1.06-.477-1.06-1.061 0-.583.476-1.059 1.06-1.059zM4.872 9.171c.583 0 1.06.476 1.06 1.059 0 .584-.477 1.061-1.06 1.061-.584 0-1.06-.477-1.06-1.061 0-.583.476-1.059 1.06-1.059zm4.254 0c.584 0 1.06.476 1.06 1.059 0 .584-.476 1.061-1.06 1.061-.584 0-1.061-.477-1.061-1.061 0-.583.477-1.059 1.061-1.059zm5.748 0c.583 0 1.06.476 1.06 1.059 0 .584-.477 1.061-1.06 1.061-.583 0-1.06-.477-1.06-1.061 0-.583.477-1.059 1.06-1.059zm-7.904 2.872h10.06v5.856H6.97v-5.856zM8.384 13.5v1.444h1.417V13.5H8.384zm4.4 0v1.444h1.416V13.5h-1.416z"/></svg>
             </a>
         </div>
-
         <div class="dotted-separator">. . . . . . . . . . . . . . .</div>
-
         <div class="footer-bottom">
             <div class="footer-logo">
                 <img src="Layer8Gameslogo500x500.png" alt="Layer 8 Games Logo">
@@ -633,52 +773,220 @@
         </div>
     </footer>
 
-    <script>
-        const menuBtn = document.getElementById('menuToggle');
-        const sideMenu = document.getElementById('sideMenu');
+    <!-- ══════════════════════════════════════════
+         MODAL DE AUTH
+    ══════════════════════════════════════════ -->
+    <div id="authModal" class="auth-modal">
+        <div class="auth-content">
+            <button class="close-modal" id="closeModal">&times;</button>
 
-        menuBtn.addEventListener('click', () => {
-            sideMenu.classList.toggle('open');
+            <!-- PANEL: Usuario NO logueado — LOGIN -->
+            <div id="panelLogin">
+                <div class="auth-header">
+                    <span class="auth-label">// PROTOCOLO DE ACCESO</span>
+                    <h2 id="authTitle">ACCESO AL SISTEMA</h2>
+                </div>
+                <input type="email" id="authEmail" placeholder="CORREO_ELECTRONICO" autocomplete="email">
+                <input type="password" id="authPassword" placeholder="PASSWORD" autocomplete="current-password">
+                <div class="auth-error" id="authError"></div>
+                <div class="auth-divider"></div>
+                <button class="btn-primary" id="authSubmit" style="width:100%; margin-top:0;">EJECUTAR LOGIN</button>
+                <p class="auth-switch" id="authSwitch">
+                    ¿No tienes cuenta? <span id="switchLink">REGÍSTRATE AQUÍ</span>
+                </p>
+            </div>
+
+            <!-- PANEL: Usuario logueado -->
+            <div id="panelUser" style="display:none;">
+                <div class="auth-header">
+                    <span class="auth-label">// SESIÓN ACTIVA</span>
+                    <h2>AGENTE IDENTIFICADO</h2>
+                </div>
+                <div class="user-panel-header">
+                    <img src="Iconologin.png" alt="Avatar" class="user-panel-avatar">
+                    <div class="user-panel-info">
+                        <span class="user-panel-name" id="displayName">AGENTE</span>
+                        <span class="user-panel-email" id="displayEmail">—</span>
+                    </div>
+                </div>
+                <div class="user-panel-status">CONEXIÓN ESTABLECIDA</div>
+                <div class="auth-divider"></div>
+                <button class="btn-logout" id="btnLogout">CERRAR SESIÓN</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ══ SCRIPTS ══ -->
+    <script>
+        /* Menú lateral */
+        document.getElementById('menuToggle').addEventListener('click', () => {
+            document.getElementById('sideMenu').classList.toggle('open');
         });
-    </script>
 
-    <script>
+        /* Fecha en hero */
         function updateTechDate() {
             const now = new Date();
-            
-            // Obtenemos día, mes y año
-            const day = String(now.getDate()).padStart(2, '0');
-            const month = String(now.getMonth() + 1).padStart(2, '0'); // Los meses van de 0 a 11
-            const year = now.getFullYear();
-
-            // Formateamos la cadena
-            const dateString = `: . : : . :${day}.${month}.${year} : . : : . :`;
-            
-            // Insertamos en el HTML
-            document.getElementById('current-date').textContent = dateString;
+            const day   = String(now.getDate()).padStart(2,'0');
+            const month = String(now.getMonth()+1).padStart(2,'0');
+            const year  = now.getFullYear();
+            document.getElementById('current-date').textContent =
+                `: . : : . :${day}.${month}.${year} : . : : . :`;
         }
-
-        // Ejecutar al cargar la página
         updateTechDate();
 
-         /* EFECTO CLICK GLOW */
-
-        document.addEventListener("click", function(e){
-
-            const glow = document.createElement("div");
-            glow.className = "click-glow";
-
-            glow.style.left = e.clientX + "px";
-            glow.style.top = e.clientY + "px";
-
+        /* Click glow */
+        document.addEventListener('click', function(e) {
+            const glow = document.createElement('div');
+            glow.className = 'click-glow';
+            glow.style.left = e.clientX + 'px';
+            glow.style.top  = e.clientY + 'px';
             document.body.appendChild(glow);
-
-            setTimeout(() => {
-                glow.remove();
-            }, 600);
-
+            setTimeout(() => glow.remove(), 600);
         });
     </script>
 
-</body>
+    <script type="module">
+        import { initializeApp }    from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword,
+                 onAuthStateChanged, signOut }
+            from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+
+        const firebaseConfig = {
+            apiKey:            "AIzaSyDjpLypLYdqboN0o1beNEVpeH_H0YGTP6U",
+            authDomain:        "layer8games-5bbeb.firebaseapp.com",
+            projectId:         "layer8games-5bbeb",
+            storageBucket:     "layer8games-5bbeb.firebasestorage.app",
+            messagingSenderId: "337957661033",
+            appId:             "1:337957661033:web:41cffb9300add7913cb5f8",
+            measurementId:     "G-JB6CTF33HB"
+        };
+
+        const app  = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+
+        /* ── Referencias DOM ── */
+        const modal       = document.getElementById('authModal');
+        const panelLogin  = document.getElementById('panelLogin');
+        const panelUser   = document.getElementById('panelUser');
+        const authTitle   = document.getElementById('authTitle');
+        const authSubmit  = document.getElementById('authSubmit');
+        const authSwitch  = document.getElementById('authSwitch');
+        const switchLink  = document.getElementById('switchLink');
+        const authEmail   = document.getElementById('authEmail');
+        const authPass    = document.getElementById('authPassword');
+        const authError   = document.getElementById('authError');
+        const displayName = document.getElementById('displayName');
+        const displayEmail= document.getElementById('displayEmail');
+        const avatar      = document.getElementById('userAvatar');
+
+        /* ── isLoginMode = false → arranca en REGISTRO por defecto ── */
+        let isLoginMode = false;
+
+        function setMode(loginMode) {
+            isLoginMode = loginMode;
+            clearError();
+            authEmail.value = '';
+            authPass.value  = '';
+            if (isLoginMode) {
+                authTitle.textContent  = 'ACCESO AL SISTEMA';
+                authSubmit.textContent = 'INICIAR SESIÓN';
+                authSwitch.innerHTML   = '¿No tienes cuenta? <span id="switchLink">REGÍSTRATE AQUÍ</span>';
+            } else {
+                authTitle.textContent  = 'NUEVO REGISTRO';
+                authSubmit.textContent = 'CREAR CUENTA';
+                authSwitch.innerHTML   = '¿Ya tienes cuenta? <span id="switchLink">INICIA SESIÓN</span>';
+            }
+            document.getElementById('switchLink').addEventListener('click', () => setMode(!isLoginMode));
+        }
+
+        /* Inicializar en modo REGISTRO */
+        setMode(false);
+
+        /* ── Abrir / Cerrar modal ── */
+        document.getElementById('loginTrigger').addEventListener('click', e => {
+            e.preventDefault();
+            modal.classList.add('active');
+        });
+        document.getElementById('closeModal').addEventListener('click', () => {
+            modal.classList.remove('active');
+            clearError();
+        });
+        modal.addEventListener('click', e => {
+            if (e.target === modal) { modal.classList.remove('active'); clearError(); }
+        });
+
+        /* ── Submit ── */
+        authSubmit.addEventListener('click', async () => {
+            const email = authEmail.value.trim();
+            const pass  = authPass.value;
+            if (!email || !pass) { showError('COMPLETA TODOS LOS CAMPOS'); return; }
+            authSubmit.textContent = 'PROCESANDO...';
+            try {
+                if (isLoginMode) {
+                    await signInWithEmailAndPassword(auth, email, pass);
+                } else {
+                    await createUserWithEmailAndPassword(auth, email, pass);
+                }
+                modal.classList.remove('active');
+                clearError();
+                authEmail.value = '';
+                authPass.value  = '';
+            } catch (err) {
+                const msgs = {
+                    'auth/user-not-found':       'AGENTE NO ENCONTRADO',
+                    'auth/wrong-password':        'CONTRASEÑA INCORRECTA',
+                    'auth/email-already-in-use':  'CORREO YA REGISTRADO — INICIA SESIÓN',
+                    'auth/invalid-email':         'CORREO INVÁLIDO',
+                    'auth/weak-password':         'CONTRASEÑA MUY DÉBIL (mín. 6 caracteres)',
+                    'auth/invalid-credential':    'CREDENCIALES INCORRECTAS',
+                };
+                showError(msgs[err.code] || 'ERROR: ' + err.message);
+            } finally {
+                authSubmit.textContent = isLoginMode ? 'INICIAR SESIÓN' : 'CREAR CUENTA';
+            }
+        });
+
+        /* Enter para enviar */
+        [authEmail, authPass].forEach(el => {
+            el.addEventListener('keydown', e => { if (e.key === 'Enter') authSubmit.click(); });
+        });
+
+        /* ── Logout ── */
+        document.getElementById('btnLogout').addEventListener('click', async () => {
+            await signOut(auth);
+            modal.classList.remove('active');
+            setMode(false); /* vuelve a registro al cerrar sesión */
+        });
+
+        /* ── Estado de sesión ── */
+        onAuthStateChanged(auth, user => {
+            if (user) {
+                panelLogin.style.display = 'none';
+                panelUser.style.display  = 'block';
+                const name = user.displayName || user.email.split('@')[0].toUpperCase();
+                displayName.textContent  = name;
+                displayEmail.textContent = user.email;
+                avatar.style.border     = '2px solid var(--yellow)';
+                avatar.style.boxShadow  = '0 0 10px rgba(255,200,0,0.4)';
+                avatar.title = 'Sesión: ' + user.email;
+            } else {
+                panelLogin.style.display = 'block';
+                panelUser.style.display  = 'none';
+                avatar.style.border     = '1px solid rgba(0,212,255,0.3)';
+                avatar.style.boxShadow  = '';
+                avatar.title = '';
+            }
+        });
+
+        function showError(msg) {
+            authError.textContent = msg;
+            authError.classList.add('show');
+        }
+        function clearError() {
+            authError.textContent = '';
+            authError.classList.remove('show');
+        }
+    </script>
+
+  </body>
 </html>

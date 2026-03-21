@@ -781,6 +781,94 @@ body {
   color: black;
 }
 
+/* =============================================
+   AGREGAR AL CSS DE NOTICIAS
+   Estos bloques reemplazan / complementan los existentes
+   ============================================= */
+
+/* ── FONDO RALLADO (SCANLINES) igual al index ── */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0,0,0,0.08) 2px,
+    rgba(0,0,0,0.08) 4px
+  );
+  pointer-events: none;
+  z-index: 9998;
+}
+
+/* ── NAV: línea azul izquierda + línea amarilla derecha ── */
+/* Reemplaza tu bloque .top-nav existente por este: */
+.top-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #000000;
+  padding: 0 24px;           /* igual al index */
+  height: 58px;              /* altura fija igual al index */
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  border-bottom: 1px solid #1a1a1a;
+  position: relative;        /* necesario para los pseudo-elementos */
+}
+
+/* Línea azul brillante — lado izquierdo */
+.top-nav::before {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 120px;
+  height: 2px;
+  background: linear-gradient(90deg, #00d4ff, transparent);
+  box-shadow: 0 0 8px #00d4ff;
+}
+
+/* Línea amarilla brillante — lado derecho */
+.top-nav::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 80px;
+  height: 2px;
+  background: linear-gradient(270deg, #ffc800, transparent);
+  box-shadow: 0 0 8px #ffc800;
+}
+
+/* ── LOGO igual al index (Orbitron + glow azul) ── */
+.logo-text {
+  font-family: 'Orbitron', sans-serif;   /* asegúrate de importar la fuente */
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 4px;
+  color: #00d4ff;
+  text-shadow: 0 0 12px #00d4ff;
+}
+
+/* ── BOTÓN MENÚ igual al index ── */
+.menu-btn {
+  background: transparent;
+  border: 1px solid rgba(0, 212, 255, 0.2);
+  border-radius: 4px;
+  color: #e8eaf0;
+  cursor: pointer;
+  padding: 6px 8px;
+  transition: border-color 0.3s, background 0.3s;
+  display: flex;
+  align-items: center;
+}
+.menu-btn:hover {
+  border-color: #00d4ff;
+  background: rgba(0, 212, 255, 0.07);
+}
+
 
 /* EFECTO GLOW AL HACER CLICK */
 

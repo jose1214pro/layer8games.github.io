@@ -5,11 +5,160 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Explora el catálogo de juegos de Layer8Games.">
     <title>Juegos - LAYER 8 GAMES</title>
-    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;600;700&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="Juegos.css">
+    <style>
+      /* ── MODAL DE AUTH (igual al index) ── */
+      .auth-modal {
+        display: none; position: fixed; z-index: 2000; inset: 0;
+        background: rgba(0,0,0,0.92); backdrop-filter: blur(6px);
+        align-items: center; justify-content: center;
+      }
+      .auth-modal.active { display: flex; }
+      .auth-content {
+        background: #0d1117; border: 1px solid #00d4ff;
+        padding: 40px; width: 90%; max-width: 420px;
+        position: relative; box-shadow: 0 0 40px rgba(0,212,255,0.15);
+      }
+      .auth-content::before {
+        content: ''; position: absolute; top: 0; right: 0;
+        width: 0; height: 0;
+        border-top: 28px solid rgba(0,212,255,0.2);
+        border-left: 28px solid transparent;
+      }
+      .auth-header { margin-bottom: 28px; }
+      .auth-header .auth-label {
+        font-family: 'Orbitron', sans-serif; font-size: 9px;
+        letter-spacing: 3px; color: #4a5568; display: block; margin-bottom: 6px;
+      }
+      .auth-header h2 {
+        font-family: 'Orbitron', sans-serif; font-size: 18px;
+        font-weight: 700; letter-spacing: 3px; color: #00d4ff;
+        text-shadow: 0 0 10px rgba(0,212,255,0.4);
+      }
+      .auth-content input {
+        width: 100%; background: #000; border: 1px solid #4a5568;
+        border-left: 3px solid rgba(0,212,255,0.3);
+        color: #00d4ff; padding: 12px 14px; margin-top: 12px;
+        font-family: 'Rajdhani', sans-serif; font-size: 14px;
+        letter-spacing: 1px; transition: border-color 0.3s;
+      }
+      .auth-content input::placeholder { color: #4a5568; }
+      .auth-content input:focus { border-color: #ffc800; border-left-color: #ffc800; outline: none; }
+      .auth-divider {
+        height: 1px; background: linear-gradient(90deg, transparent, rgba(0,212,255,0.2), transparent);
+        margin: 20px 0;
+      }
+      .auth-switch { margin-top: 16px; font-size: 12px; color: #4a5568; text-align: center; letter-spacing: 1px; }
+      .auth-switch span { color: #ffc800; cursor: pointer; text-decoration: underline; }
+      .close-modal {
+        position: absolute; top: 12px; right: 18px; color: #ff3c3c;
+        font-size: 26px; cursor: pointer; line-height: 1;
+        transition: color 0.2s, transform 0.2s; background: none; border: none;
+      }
+      .close-modal:hover { color: #fff; transform: rotate(90deg); }
+      .auth-btn-submit {
+        width: 100%; margin-top: 0; background: #ffc800; color: #000;
+        padding: 13px; font-family: 'Orbitron', sans-serif; font-size: 11px;
+        font-weight: 700; letter-spacing: 2px; border: none; cursor: pointer;
+        clip-path: polygon(6% 0,100% 0,100% 70%,94% 100%,0 100%,0% 30%);
+        transition: background 0.2s, transform 0.2s;
+      }
+      .auth-btn-submit:hover { background: #fff; transform: scale(1.02); }
+      .auth-error {
+        background: rgba(255,60,60,0.08); border: 1px solid rgba(255,60,60,0.3);
+        border-left: 3px solid #ff3c3c; color: #ff8080; font-size: 12px;
+        padding: 10px 14px; margin-top: 12px; display: none; letter-spacing: 0.5px;
+      }
+      .auth-error.show { display: block; }
+
+      /* Panel usuario logueado */
+      .user-panel-header { display: flex; align-items: center; gap: 16px; margin-bottom: 20px; }
+      .user-panel-avatar {
+        width: 52px; height: 52px; border-radius: 50%;
+        border: 2px solid #ffc800; box-shadow: 0 0 12px rgba(255,200,0,0.3); object-fit: cover;
+      }
+      .user-panel-name {
+        font-family: 'Orbitron', sans-serif; font-size: 13px;
+        font-weight: 700; color: #ffc800; letter-spacing: 2px; display: block;
+      }
+      .user-panel-email { font-size: 12px; color: #4a5568; letter-spacing: 1px; display: block; margin-top: 3px; }
+      .user-panel-status {
+        display: flex; align-items: center; gap: 6px;
+        font-family: 'Orbitron', sans-serif; font-size: 9px;
+        letter-spacing: 2px; color: #2ecc71; margin-bottom: 20px;
+      }
+      .user-panel-status::before {
+        content: ''; width: 7px; height: 7px; border-radius: 50%;
+        background: #2ecc71; box-shadow: 0 0 6px #2ecc71;
+        animation: statusPulse 2s ease-in-out infinite;
+      }
+      @keyframes statusPulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+      .btn-logout {
+        width: 100%; background: transparent; border: 1px solid rgba(255,60,60,0.4);
+        color: #ff3c3c; padding: 11px; font-family: 'Orbitron', sans-serif;
+        font-size: 10px; font-weight: 700; letter-spacing: 2px; cursor: pointer;
+        transition: background 0.2s, border-color 0.2s; margin-top: 8px;
+      }
+      .btn-logout:hover { background: rgba(255,60,60,0.1); border-color: #ff3c3c; }
+
+      /* ── TOAST NOTIFICACIONES ── */
+      .toast {
+        position: fixed; bottom: 30px; right: 30px; z-index: 9999;
+        background: #0d1117; border: 1px solid #00d4ff;
+        border-left: 3px solid #00d4ff;
+        color: #e8eaf0; padding: 14px 20px;
+        font-family: 'Orbitron', sans-serif; font-size: 10px; letter-spacing: 2px;
+        box-shadow: 0 0 20px rgba(0,212,255,0.2);
+        transform: translateX(120%); transition: transform 0.4s ease;
+        max-width: 320px;
+      }
+      .toast.show { transform: translateX(0); }
+      .toast.success { border-color: #2ecc71; border-left-color: #2ecc71; }
+      .toast.error   { border-color: #ff3c3c; border-left-color: #ff3c3c; }
+      .toast.warning { border-color: #ffc800; border-left-color: #ffc800; }
+      .toast-label {
+        font-size: 8px; letter-spacing: 3px; margin-bottom: 4px;
+        display: block; opacity: 0.6;
+      }
+
+      /* ── BOTÓN COMPRAR deshabilitado ── */
+      .btn-checkout:disabled {
+        opacity: 0.4; cursor: not-allowed;
+      }
+
+      /* ── BADGE "YA COMPRADO" ── */
+      .owned-badge {
+        display: inline-block; background: rgba(46,204,113,0.1);
+        border: 1px solid rgba(46,204,113,0.4); color: #2ecc71;
+        font-family: 'Orbitron', sans-serif; font-size: 8px;
+        letter-spacing: 2px; padding: 4px 10px; margin-top: 8px;
+      }
+
+      /* ── SCANLINES ── */
+      body::after {
+        content: ''; position: fixed; inset: 0;
+        background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.08) 2px, rgba(0,0,0,0.08) 4px);
+        pointer-events: none; z-index: 9998;
+      }
+      .click-glow {
+        position: fixed; width: 20px; height: 20px; border-radius: 50%;
+        background: radial-gradient(circle, rgba(0,212,255,0.9) 0%, rgba(0,212,255,0.4) 40%, transparent 70%);
+        transform: translate(-50%,-50%);
+        animation: clickGlowAnim 0.6s ease-out forwards;
+        pointer-events: none; z-index: 9999;
+      }
+      @keyframes clickGlowAnim {
+        0%  { transform: translate(-50%,-50%) scale(0.3); opacity:1; }
+        70% { transform: translate(-50%,-50%) scale(3);   opacity:0.6; }
+        100%{ transform: translate(-50%,-50%) scale(4);   opacity:0; }
+      }
+    </style>
   </head>
 
   <body id="inicio">
+
+    <!-- ══ NAV ══ -->
     <nav class="top-nav">
       <button class="menu-btn" id="menuToggle">
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -35,16 +184,16 @@
 
         <div class="search-container">
           <input type="text" id="game-search" class="search-input" placeholder="Buscar juego por nombre o género...">
-          <button class="search-btn" title="Buscar">
-            🔍
-          </button>
+          <button class="search-btn" title="Buscar">🔍</button>
         </div>
-        <a href="#" class="login-link">
-          <img src="/Iconologin.png" class="user-avatar">
+
+        <a href="#" class="login-link" id="loginTrigger">
+          <img src="/Iconologin.png" class="user-avatar" id="userAvatar">
         </a>
       </div>
     </nav>
 
+    <!-- ══ MENÚ LATERAL ══ -->
     <aside class="side-menu" id="sideMenu">
       <ul class="menu-links">
         <li><a href="../index.html">INICIO</a></li>
@@ -54,6 +203,7 @@
       </ul>
     </aside>
 
+    <!-- ══ HERO ══ -->
     <header class="games-hero">
       <div class="hero-content">
         <h1 class="hero-title">Juegos de Layer8Games</h1>
@@ -62,18 +212,18 @@
       </div>
     </header>
 
+    <!-- ══ TIENDA ══ -->
     <main class="store-container">
       <div class="games-grid">
-        <article class="game-card">
+
+        <article class="game-card" data-id="layer8gamecenter" data-name="Layer8GameCenter" data-price="Free">
           <div class="game-image">
             <img src="/LogoGameCenter.png">
             <span class="tag">Popular</span>
           </div>
-
           <div class="game-content">
             <h2>Layer8GameCenter</h2>
             <p class="genre">FPS / Launcher</p>
-
             <div class="purchase-area">
               <span class="price">$Free</span>
               <button class="btn-add-cart">AGREGAR</button>
@@ -81,16 +231,14 @@
           </div>
         </article>
 
-        <article class="game-card">
+        <article class="game-card" data-id="project-unknown" data-name="Project ???" data-price="Free">
           <div class="game-image">
             <img src="/VortexLogo.png">
             <span class="tag">Proximamente</span>
           </div>
-
           <div class="game-content">
             <h2>Project ???</h2>
             <p class="genre">Catergoria/???</p>
-
             <div class="purchase-area">
               <span class="price">$Free</span>
               <button class="btn-add-cart">AGREGAR</button>
@@ -98,31 +246,26 @@
           </div>
         </article>
 
-        <article class="game-card">
+        <article class="game-card" data-id="layer8nexus" data-name="Layer8 Nexus" data-price="Free">
           <div class="game-image">
             <img src="/NexusLogo.png">
-            <!-- Descuentos
-            span class="tag discount">-20%</span -->
           </div>
-
           <div class="game-content">
             <h2>Layer8 Nexus</h2>
             <p class="genre">Navegadores / Web</p>
-
             <div class="purchase-area">
               <div class="prices-discount">
-                <!-- span class="price-old">$14.99</span-->
                 <span class="price">$Free</span>
               </div>
-
               <button class="btn-add-cart">AGREGAR</button>
             </div>
           </div>
         </article>
+
       </div>
     </main>
 
-    <h1 class="hero-title" style="text-align: center;">Zona Interactiva de Layer8Games</h1>
+    <h1 class="hero-title" style="text-align:center;">Zona Interactiva de Layer8Games</h1>
 
     <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.0.0/model-viewer.min.js"></script>
 
@@ -135,7 +278,7 @@
             <div class="anim-selector"></div>
           </model-viewer>
           <div class="palette-container">
-            <input type="color" class="color-input" oninput="applyColor('cont-1', 'model-1', this.value)">
+            <input type="color" class="color-input" oninput="applyColor('cont-1','model-1',this.value)">
           </div>
         </div>
       </div>
@@ -148,7 +291,7 @@
             <div class="anim-selector"></div>
           </model-viewer>
           <div class="palette-container">
-            <input type="color" class="color-input" oninput="applyColor('cont-2', 'model-2', this.value)">
+            <input type="color" class="color-input" oninput="applyColor('cont-2','model-2',this.value)">
           </div>
         </div>
       </div>
@@ -161,130 +304,167 @@
             <div class="anim-selector"></div>
           </model-viewer>
           <div class="palette-container">
-            <input type="color" class="color-input" oninput="applyColor('cont-3', 'model-3', this.value)">
+            <input type="color" class="color-input" oninput="applyColor('cont-3','model-3',this.value)">
           </div>
         </div>
       </div>
     </div>
 
-<footer class="bottom-section">
-  <a href="#inicio" class="scroll-top">
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-      <polyline points="18 15 12 9 6 15"></polyline>
-    </svg>
-    VOLVER ARRIBA
-  </a>
-
+    <!-- ══ FOOTER ══ -->
+    <footer class="bottom-section">
+      <a href="#inicio" class="scroll-top">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="18 15 12 9 6 15"></polyline>
+        </svg>
+        VOLVER ARRIBA
+      </a>
       <div class="footer-logo">
         <img src="/Layer8Gameslogo500x500.png">
         <span>LAYER 8 GAMES</span>
       </div>
     </footer>
 
-    <!-- CARRITO -->
+    <!-- ══ CARRITO ══ -->
     <aside class="cart-drawer" id="cartDrawer">
       <div class="cart-header">
         <h2>TU CARRITO</h2>
         <button class="close-cart" id="closeCart">X</button>
       </div>
-
       <div class="cart-body" id="cartItems">
         <p class="empty-msg">El carrito está vacío</p>
       </div>
-
       <div class="cart-footer">
-        <button class="btn-checkout">FINALIZAR COMPRA</button>
+        <p class="cart-login-warning" id="cartLoginWarning" style="display:none; font-size:11px; color:#ffc800; font-family:'Orbitron',sans-serif; letter-spacing:1px; margin-bottom:10px; text-align:center;">
+          INICIA SESIÓN PARA COMPRAR
+        </p>
+        <button class="btn-checkout" id="btnCheckout">FINALIZAR COMPRA</button>
       </div>
     </aside>
 
     <div class="overlay" id="overlay"></div>
 
+    <!-- ══ MODAL AUTH ══ -->
+    <div id="authModal" class="auth-modal">
+      <div class="auth-content">
+        <button class="close-modal" id="closeModal">&times;</button>
+
+        <!-- Sin sesión -->
+        <div id="panelLogin">
+          <div class="auth-header">
+            <span class="auth-label">// PROTOCOLO DE ACCESO</span>
+            <h2 id="authTitle">NUEVO REGISTRO</h2>
+          </div>
+          <input type="email" id="authEmail" placeholder="CORREO_ELECTRONICO" autocomplete="email">
+          <input type="password" id="authPassword" placeholder="PASSWORD" autocomplete="current-password">
+          <div class="auth-error" id="authError"></div>
+          <div class="auth-divider"></div>
+          <button class="auth-btn-submit" id="authSubmit">CREAR CUENTA</button>
+          <p class="auth-switch" id="authSwitch">
+            ¿Ya tienes cuenta? <span id="switchLink">INICIA SESIÓN</span>
+          </p>
+        </div>
+
+        <!-- Con sesión -->
+        <div id="panelUser" style="display:none;">
+          <div class="auth-header">
+            <span class="auth-label">// SESIÓN ACTIVA</span>
+            <h2>AGENTE IDENTIFICADO</h2>
+          </div>
+          <div class="user-panel-header">
+            <img src="/Iconologin.png" alt="Avatar" class="user-panel-avatar">
+            <div>
+              <span class="user-panel-name" id="displayName">AGENTE</span>
+              <span class="user-panel-email" id="displayEmail">—</span>
+            </div>
+          </div>
+          <div class="user-panel-status">CONEXIÓN ESTABLECIDA</div>
+          <div class="auth-divider"></div>
+          <button class="btn-logout" id="btnLogout">CERRAR SESIÓN</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ TOAST ══ -->
+    <div class="toast" id="toast">
+      <span class="toast-label" id="toastLabel">SISTEMA</span>
+      <span id="toastMsg">—</span>
+    </div>
+
+    <!-- ══ SCRIPTS NO-MODULE ══ -->
     <script>
-      /* MENU */
-      const menuBtn = document.getElementById("menuToggle");
-      const sideMenu = document.getElementById("sideMenu");
-
-      menuBtn.addEventListener("click", () => {
-        sideMenu.classList.toggle("open");
+      /* Menú lateral */
+      document.getElementById('menuToggle').addEventListener('click', () => {
+        document.getElementById('sideMenu').classList.toggle('open');
       });
 
-      /* ABRIR CARRITO */
-      const cartBtn = document.getElementById("cartBtn");
-      const cartDrawer = document.getElementById("cartDrawer");
-      const closeCart = document.getElementById("closeCart");
-      const overlay = document.getElementById("overlay");
-
-      cartBtn.addEventListener("click", (e) => {
+      /* Carrito — abrir/cerrar */
+      const cartDrawer = document.getElementById('cartDrawer');
+      const overlay    = document.getElementById('overlay');
+      document.getElementById('cartBtn').addEventListener('click', e => {
         e.preventDefault();
-        cartDrawer.classList.add("open");
-        overlay.classList.add("show");
+        cartDrawer.classList.add('open');
+        overlay.classList.add('show');
+      });
+      document.getElementById('closeCart').addEventListener('click', () => {
+        cartDrawer.classList.remove('open');
+        overlay.classList.remove('show');
+      });
+      overlay.addEventListener('click', () => {
+        cartDrawer.classList.remove('open');
+        overlay.classList.remove('show');
       });
 
-      closeCart.addEventListener("click", () => {
-        cartDrawer.classList.remove("open");
-        overlay.classList.remove("show");
-      });
-
-      overlay.addEventListener("click", () => {
-        cartDrawer.classList.remove("open");
-        overlay.classList.remove("show");
-      });
-
-      /* BOTONES AGREGAR */
-      document.querySelectorAll(".btn-add-cart").forEach(btn => {
-        btn.addEventListener("click", function() {
-          addToCart(this);
-        });
-      });
-
-      /* LOGICA DEL CARRITO */
-      let cart = [];
-
-      function addToCart(button) {
-        const card = button.closest(".game-card");
-        const name = card.querySelector("h2").innerText;
-        const price = card.querySelector(".price").innerText;
-        const img = card.querySelector("img").src;
-
-        const product = {
-          name: name,
-          price: price,
-          img: img
-        };
-
-        if (!cart.some(item => item.name === name)) {
-          cart.push(product);
-          updateCart();
-        } else {
-          alert("Este juego ya está en el carrito.");
-        }
+      /* Toast helper */
+      function showToast(msg, type = 'info', label = 'SISTEMA') {
+        const t = document.getElementById('toast');
+        document.getElementById('toastMsg').textContent   = msg;
+        document.getElementById('toastLabel').textContent = label;
+        t.className = 'toast ' + type;
+        t.classList.add('show');
+        setTimeout(() => t.classList.remove('show'), 3500);
       }
 
-      function updateCart() {
-        const cartItems = document.getElementById("cartItems");
-        const cartCount = document.getElementById("cartCount");
+      /* ── CARRITO ── */
+      let cart = [];
+      window.currentUser = null; /* el módulo Firebase actualiza window.currentUser */
 
-        cartItems.innerHTML = "";
+      function updateCart() {
+        const cartItems = document.getElementById('cartItems');
+        const cartCount = document.getElementById('cartCount');
+        const warning   = document.getElementById('cartLoginWarning');
+        const checkout  = document.getElementById('btnCheckout');
+        const user      = window.currentUser;
+
+        cartItems.innerHTML = '';
 
         if (cart.length === 0) {
           cartItems.innerHTML = "<p class='empty-msg'>El carrito está vacío</p>";
+        } else {
+          cart.forEach((item, index) => {
+            const div = document.createElement('div');
+            div.classList.add('cart-item');
+            div.innerHTML = `
+              <img src="${item.img}" width="50">
+              <div>
+                <h4>${item.name}</h4>
+                <p>${item.price}</p>
+              </div>
+              <button onclick="removeItem(${index})">X</button>
+            `;
+            cartItems.appendChild(div);
+          });
         }
 
-        cart.forEach((item, index) => {
-          const div = document.createElement("div");
-          div.classList.add("cart-item");
-          div.innerHTML = `
-            <img src="${item.img}" width="50">
-            <div>
-              <h4>${item.name}</h4>
-              <p>${item.price}</p>
-            </div>
-            <button onclick="removeItem(${index})">X</button>
-          `;
-          cartItems.appendChild(div);
-        });
-
         cartCount.textContent = cart.length;
+
+        /* Mostrar aviso si no hay sesión */
+        if (!user && cart.length > 0) {
+          warning.style.display = 'block';
+          checkout.disabled = true;
+        } else {
+          warning.style.display = 'none';
+          checkout.disabled = (cart.length === 0);
+        }
       }
 
       function removeItem(index) {
@@ -292,122 +472,95 @@
         updateCart();
       }
 
-        /* EFECTO CLICK GLOW */
+      function addToCart(button) {
+        const card  = button.closest('.game-card');
+        const name  = card.querySelector('h2').innerText;
+        const price = card.querySelector('.price').innerText;
+        const img   = card.querySelector('img').src;
+        const id    = card.dataset.id;
 
-    document.addEventListener("click", function(e){
+        if (!cart.some(item => item.id === id)) {
+          cart.push({ id, name, price, img });
+          updateCart();
+          showToast(name + ' AGREGADO AL CARRITO', 'info', 'CARRITO');
+        } else {
+          showToast('YA ESTÁ EN EL CARRITO', 'warning', 'CARRITO');
+        }
+      }
 
-        const glow = document.createElement("div");
-        glow.className = "click-glow";
+      document.querySelectorAll('.btn-add-cart').forEach(btn => {
+        btn.addEventListener('click', function() { addToCart(this); });
+      });
 
-        glow.style.left = e.clientX + "px";
-        glow.style.top = e.clientY + "px";
-
+      /* Click glow */
+      document.addEventListener('click', function(e) {
+        const glow = document.createElement('div');
+        glow.className = 'click-glow';
+        glow.style.left = e.clientX + 'px';
+        glow.style.top  = e.clientY + 'px';
         document.body.appendChild(glow);
+        setTimeout(() => glow.remove(), 600);
+      });
 
-        setTimeout(() => {
-            glow.remove();
-        }, 600);
-
-    });
-
-    /* --------- BUSCADOR DE JUEGOS (SCROLL SUAVE) --------- */
+      /* Buscador */
       const searchInput = document.getElementById('game-search');
-      const searchBtn = document.querySelector('.search-btn');
+      const searchBtn   = document.querySelector('.search-btn');
 
       function searchAndScroll() {
-        // Obtenemos lo que el usuario escribió, en minúsculas y sin espacios extra
         const query = searchInput.value.toLowerCase().trim();
-        if (query === "") return; // Si está vacío, no hace nada
-
+        if (query === '') return;
         const gameCards = document.querySelectorAll('.game-card');
         let found = false;
-
-        // Recorremos todas las tarjetas de juegos
         for (const card of gameCards) {
           const title = card.querySelector('h2').innerText.toLowerCase();
           const genre = card.querySelector('.genre').innerText.toLowerCase();
-
-          // Si el texto buscado es parte del título o del género...
           if (title.includes(query) || genre.includes(query)) {
-            
-            // 1. Hacemos scroll suavemente hasta dejar la tarjeta en el centro de la pantalla
             card.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            
-            // 2. Le damos un brillo temporal para resaltarlo
-            const originalShadow = card.style.boxShadow;
-            card.style.transition = "box-shadow 0.4s ease";
-            card.style.boxShadow = "0 0 30px #00d4ff"; // Brillo azul neón
-            
-            // Quitamos el brillo después de 2 segundos
-            setTimeout(() => {
-              card.style.boxShadow = originalShadow;
-            }, 2000);
-
+            const orig = card.style.boxShadow;
+            card.style.transition  = 'box-shadow 0.4s ease';
+            card.style.boxShadow   = '0 0 30px #00d4ff';
+            setTimeout(() => { card.style.boxShadow = orig; }, 2000);
             found = true;
-            break; // Nos detenemos en el primer juego que coincida
+            break;
           }
         }
-
-        // Opcional: Si no encuentra nada, avisa al usuario
-        if (!found) {
-          alert("No se encontró ningún juego con ese nombre o género.");
-        }
+        if (!found) showToast('NO SE ENCONTRÓ ESE JUEGO', 'warning', 'BUSCADOR');
       }
 
-      // Ejecutar la búsqueda al presionar la tecla "Enter"
-      searchInput.addEventListener('keyup', (e) => {
-        if (e.key === 'Enter') {
-          searchAndScroll();
-        }
-      });
-
-      // Ejecutar la búsqueda al hacer clic en el botón de la lupa
-      searchBtn.addEventListener('click', (e) => {
-        e.preventDefault(); // Evita que la página recargue por accidente
-        searchAndScroll();
-      });
+      searchInput.addEventListener('keyup', e => { if (e.key === 'Enter') searchAndScroll(); });
+      searchBtn.addEventListener('click',   e => { e.preventDefault(); searchAndScroll(); });
     </script>
 
+    <!-- ══ MODELOS 3D ══ -->
     <script>
       const seleccionesSubclase = {};
 
-      // Función optimizada para detectar y mostrar animaciones
       function setupAnimations(mv, animSelector) {
-        const animations = mv.availableAnimations;
-        
+        let animations = mv.availableAnimations;
+        if (mv.id === 'model-2') animations = animations.slice(2);
         if (animSelector && animations.length > 0) {
-          animSelector.innerHTML = ''; // Limpiamos "Cargando..." o botones viejos
-          
-          animations.forEach((animName) => {
+          animSelector.innerHTML = '';
+          animations.forEach(animName => {
             const btn = document.createElement('button');
-            btn.textContent = animName; 
-            btn.onclick = () => {
-              mv.animationName = animName;
-              mv.play();
-            };
+            btn.textContent = animName;
+            btn.onclick = () => { mv.animationName = animName; mv.play(); };
             animSelector.appendChild(btn);
           });
-          
-          // Auto-reproducir la primera
           mv.animationName = animations[0];
           mv.play();
-          console.log(`✅ Animaciones cargadas para ${mv.id}:`, animations);
-        } else {
-          console.warn(`⚠️ No se detectaron animaciones en ${mv.id} aún.`);
         }
       }
 
-      document.querySelectorAll('model-viewer').forEach((mv) => {
+      document.querySelectorAll('model-viewer').forEach(mv => {
         mv.addEventListener('load', () => {
-          const container = mv.closest('.container-3d');
-          const contId = container.id;
+          const container      = mv.closest('.container-3d');
+          const contId         = container.id;
           const materialSelector = container.querySelector('.zona-selector');
-          const animSelector = container.querySelector('.anim-selector');
+          const animSelector     = container.querySelector('.anim-selector');
 
-          // --- 1. CARGAR MATERIALES ---
           const materials = mv.model.materials;
           if (materialSelector) {
-            materialSelector.innerHTML = ''; 
+            materialSelector.innerHTML = '';
             materials.forEach((material, index) => {
               const btn = document.createElement('button');
               btn.textContent = material.name || `Parte ${index + 1}`;
@@ -424,15 +577,9 @@
             });
           }
 
-          // --- 2. CARGAR ANIMACIONES CON RE-INTENTO ---
-          // Intentar inmediatamente
           setupAnimations(mv, animSelector);
-          
-          // Re-intentar a los 500ms por si el modelo es pesado (como Man TV)
           setTimeout(() => {
-            if (animSelector && animSelector.children.length === 0) {
-              setupAnimations(mv, animSelector);
-            }
+            if (animSelector && animSelector.children.length === 0) setupAnimations(mv, animSelector);
           }, 500);
         });
       });
@@ -447,38 +594,235 @@
       }
 
       function hexToRgba(hex) {
-        const r = parseInt(hex.slice(1, 3), 16) / 255;
-        const g = parseInt(hex.slice(3, 5), 16) / 255;
-        const b = parseInt(hex.slice(5, 7), 16) / 255;
-        return [r, g, b, 1];
-      }
-
-      function setupAnimations(mv, animSelector) {
-        let animations = mv.availableAnimations;
-        
-        // SI ES EL MODELO DE MAN TV (model-2), IGNORAMOS LAS PRIMERAS 2
-        if (mv.id === 'model-2') {
-          animations = animations.slice(2); 
-        }
-
-        if (animSelector && animations.length > 0) {
-          animSelector.innerHTML = ''; 
-          
-          animations.forEach((animName) => {
-            const btn = document.createElement('button');
-            btn.textContent = animName; 
-            btn.onclick = () => {
-              mv.animationName = animName;
-              mv.play();
-            };
-            animSelector.appendChild(btn);
-          });
-          
-          // Reproduce la primera de la lista filtrada
-          mv.animationName = animations[0];
-          mv.play();
-        }
+        return [
+          parseInt(hex.slice(1,3),16)/255,
+          parseInt(hex.slice(3,5),16)/255,
+          parseInt(hex.slice(5,7),16)/255,
+          1
+        ];
       }
     </script>
+
+    <!-- ══ FIREBASE AUTH + FIRESTORE ══ -->
+    <script type="module">
+      import { initializeApp }   from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+      import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword,
+               onAuthStateChanged, signOut }
+          from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+      import { getFirestore, doc, setDoc, getDoc, collection, addDoc, serverTimestamp }
+          from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+      const firebaseConfig = {
+        apiKey:            "AIzaSyDjpLypLYdqboN0o1beNEVpeH_H0YGTP6U",
+        authDomain:        "layer8games-5bbeb.firebaseapp.com",
+        projectId:         "layer8games-5bbeb",
+        storageBucket:     "layer8games-5bbeb.firebasestorage.app",
+        messagingSenderId: "337957661033",
+        appId:             "1:337957661033:web:41cffb9300add7913cb5f8",
+        measurementId:     "G-JB6CTF33HB"
+      };
+
+      const app   = initializeApp(firebaseConfig);
+      const auth  = getAuth(app);
+      const db    = getFirestore(app);
+
+      /* ── DOM refs ── */
+      const modal       = document.getElementById('authModal');
+      const panelLogin  = document.getElementById('panelLogin');
+      const panelUser   = document.getElementById('panelUser');
+      const authTitle   = document.getElementById('authTitle');
+      const authSubmit  = document.getElementById('authSubmit');
+      const authSwitch  = document.getElementById('authSwitch');
+      const authEmail   = document.getElementById('authEmail');
+      const authPass    = document.getElementById('authPassword');
+      const authError   = document.getElementById('authError');
+      const displayName = document.getElementById('displayName');
+      const displayEmail= document.getElementById('displayEmail');
+      const avatar      = document.getElementById('userAvatar');
+
+      let isLoginMode = false;
+
+      /* ── Helpers ── */
+      function showError(msg) { authError.textContent = msg; authError.classList.add('show'); }
+      function clearError()   { authError.textContent = '';  authError.classList.remove('show'); }
+
+      function setMode(loginMode) {
+        isLoginMode = loginMode;
+        clearError();
+        authEmail.value = '';
+        authPass.value  = '';
+        if (isLoginMode) {
+          authTitle.textContent  = 'ACCESO AL SISTEMA';
+          authSubmit.textContent = 'INICIAR SESIÓN';
+          authSwitch.innerHTML   = '¿No tienes cuenta? <span id="switchLink">REGÍSTRATE AQUÍ</span>';
+        } else {
+          authTitle.textContent  = 'NUEVO REGISTRO';
+          authSubmit.textContent = 'CREAR CUENTA';
+          authSwitch.innerHTML   = '¿Ya tienes cuenta? <span id="switchLink">INICIA SESIÓN</span>';
+        }
+        document.getElementById('switchLink').addEventListener('click', () => setMode(!isLoginMode));
+      }
+
+      setMode(false);
+
+      /* ── Abrir/cerrar modal ── */
+      document.getElementById('loginTrigger').addEventListener('click', e => {
+        e.preventDefault(); modal.classList.add('active');
+      });
+      document.getElementById('closeModal').addEventListener('click', () => {
+        modal.classList.remove('active'); clearError();
+      });
+      modal.addEventListener('click', e => {
+        if (e.target === modal) { modal.classList.remove('active'); clearError(); }
+      });
+
+      /* ── Submit auth ── */
+      authSubmit.addEventListener('click', async () => {
+        const email = authEmail.value.trim();
+        const pass  = authPass.value;
+        if (!email || !pass) { showError('COMPLETA TODOS LOS CAMPOS'); return; }
+        authSubmit.textContent = 'PROCESANDO...';
+        try {
+          if (isLoginMode) {
+            await signInWithEmailAndPassword(auth, email, pass);
+          } else {
+            const cred = await createUserWithEmailAndPassword(auth, email, pass);
+            /* Crear documento de usuario en Firestore */
+            await setDoc(doc(db, 'users', cred.user.uid), {
+              email:     cred.user.email,
+              createdAt: serverTimestamp(),
+              purchases: []
+            });
+          }
+          modal.classList.remove('active');
+          clearError();
+        } catch (err) {
+          const msgs = {
+            'auth/user-not-found':      'AGENTE NO ENCONTRADO',
+            'auth/wrong-password':      'CONTRASEÑA INCORRECTA',
+            'auth/email-already-in-use':'CORREO YA REGISTRADO — INICIA SESIÓN',
+            'auth/invalid-email':       'CORREO INVÁLIDO',
+            'auth/weak-password':       'CONTRASEÑA MUY DÉBIL (mín. 6 caracteres)',
+            'auth/invalid-credential':  'CREDENCIALES INCORRECTAS',
+          };
+          showError(msgs[err.code] || 'ERROR: ' + err.message);
+        } finally {
+          authSubmit.textContent = isLoginMode ? 'INICIAR SESIÓN' : 'CREAR CUENTA';
+        }
+      });
+
+      [authEmail, authPass].forEach(el => {
+        el.addEventListener('keydown', e => { if (e.key === 'Enter') authSubmit.click(); });
+      });
+
+      /* ── Logout ── */
+      document.getElementById('btnLogout').addEventListener('click', async () => {
+        await signOut(auth);
+        modal.classList.remove('active');
+        setMode(false);
+        window.showToast('SESIÓN CERRADA', 'info', 'AUTH');
+      });
+
+      /* ── Estado de sesión ── */
+      onAuthStateChanged(auth, async user => {
+        window.currentUser = user; /* exponer al scope global para el carrito */
+
+        if (user) {
+          panelLogin.style.display = 'none';
+          panelUser.style.display  = 'block';
+          const name = user.displayName || user.email.split('@')[0].toUpperCase();
+          displayName.textContent  = name;
+          displayEmail.textContent = user.email;
+          avatar.style.border      = '2px solid #ffc800';
+          avatar.style.boxShadow   = '0 0 10px rgba(255,200,0,0.4)';
+          avatar.title = 'Sesión: ' + user.email;
+
+          /* Marcar juegos ya comprados */
+          await marcarJuegosComprados(user.uid);
+        } else {
+          panelLogin.style.display = 'block';
+          panelUser.style.display  = 'none';
+          avatar.style.border      = '1px solid rgba(0,212,255,0.3)';
+          avatar.style.boxShadow   = '';
+          avatar.title = '';
+        }
+
+        /* Actualizar estado del carrito según sesión */
+        updateCart();
+      });
+
+      /* ── Marcar juegos ya comprados ── */
+      async function marcarJuegosComprados(uid) {
+        try {
+          const userDoc = await getDoc(doc(db, 'users', uid));
+          if (!userDoc.exists()) return;
+          const purchases = userDoc.data().purchases || [];
+
+          document.querySelectorAll('.game-card').forEach(card => {
+            const gameId = card.dataset.id;
+            if (purchases.includes(gameId)) {
+              const btn = card.querySelector('.btn-add-cart');
+              btn.textContent = 'YA LO TIENES';
+              btn.disabled    = true;
+              btn.style.opacity = '0.5';
+              btn.style.cursor  = 'not-allowed';
+            }
+          });
+        } catch (e) { console.warn('No se pudo leer compras:', e); }
+      }
+
+      /* ── FINALIZAR COMPRA → Firestore ── */
+      document.getElementById('btnCheckout').addEventListener('click', async () => {
+        const user = window.currentUser;
+        if (!user) {
+          window.showToast('INICIA SESIÓN PARA COMPRAR', 'warning', 'AUTH');
+          modal.classList.add('active');
+          return;
+        }
+        if (cart.length === 0) return;
+
+        const btn = document.getElementById('btnCheckout');
+        btn.textContent = 'PROCESANDO...';
+        btn.disabled    = true;
+
+        try {
+          const ids    = cart.map(i => i.id);
+          const names  = cart.map(i => i.name);
+          const userRef = doc(db, 'users', user.uid);
+
+          /* 1 — Registrar orden en subcolección "orders" */
+          await addDoc(collection(db, 'users', user.uid, 'orders'), {
+            items:     cart.map(i => ({ id: i.id, name: i.name, price: i.price })),
+            total:     cart.length + ' juego(s) gratuito(s)',
+            date:      serverTimestamp(),
+            userEmail: user.email
+          });
+
+          /* 2 — Actualizar lista de juegos del usuario */
+          const userSnap = await getDoc(userRef);
+          const prevPurchases = userSnap.exists() ? (userSnap.data().purchases || []) : [];
+          const merged = [...new Set([...prevPurchases, ...ids])];
+          await setDoc(userRef, { purchases: merged }, { merge: true });
+
+          /* 3 — Limpiar carrito y feedback */
+          cart = [];
+          updateCart();
+          document.getElementById('cartDrawer').classList.remove('open');
+          document.getElementById('overlay').classList.remove('show');
+          window.showToast('COMPRA COMPLETADA — ' + names.join(', '), 'success', 'TIENDA');
+
+          /* 4 — Marcar como comprados en la UI */
+          await marcarJuegosComprados(user.uid);
+
+        } catch (err) {
+          console.error(err);
+          window.showToast('ERROR AL PROCESAR: ' + err.message, 'error', 'TIENDA');
+        } finally {
+          btn.textContent = 'FINALIZAR COMPRA';
+          btn.disabled    = false;
+        }
+      });
+    </script>
+
   </body>
 </html>

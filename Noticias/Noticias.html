@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Noticias - LAYER 8 GAMES</title>
-    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;600;700&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="Noticias.css">
 </head>
 <body id="inicio">
@@ -20,8 +20,8 @@
         <div class="logo">
             <span class="logo-text">LAYER 8 GAMES</span>
         </div>
-        <a href="#" class="login-link">
-            <img src="/Iconologin.png" alt="Usuario" class="user-avatar">
+        <a href="#" class="login-link" id="loginTrigger">
+            <img src="/Iconologin.png" alt="Usuario" class="user-avatar" id="userAvatar">
         </a>
     </nav>
 
@@ -58,7 +58,7 @@
 
             <article class="news-card">
                 <div class="news-image">
-                    <img src="/Layer8Gameslogo500x500.png" alt="Update 2">
+                    <img src="/Layer8Aniversario.png" alt="Update 2">
                 </div>
                 <div class="news-content">
                     <span class="date">23 FEBRERO 2023</span>
@@ -92,30 +92,146 @@
         </div>
     </footer>
 
+    <!-- Modal de sesión (mini — solo muestra info o redirige al index a registrarse) -->
+    <div id="authModal" style="
+        display:none; position:fixed; z-index:2000; inset:0;
+        background:rgba(0,0,0,0.92); backdrop-filter:blur(6px);
+        align-items:center; justify-content:center;">
+        <div style="
+            background:#0d1117; border:1px solid #00d4ff;
+            padding:40px; width:90%; max-width:420px; position:relative;
+            box-shadow:0 0 40px rgba(0,212,255,0.15); font-family:'Rajdhani',sans-serif;">
+
+            <button id="closeModal" style="
+                position:absolute; top:12px; right:18px;
+                background:none; border:none; color:#ff3c3c;
+                font-size:26px; cursor:pointer; line-height:1;">×</button>
+
+            <!-- Panel: NO logueado -->
+            <div id="panelGuest">
+                <p style="font-family:'Orbitron',sans-serif; font-size:9px; letter-spacing:3px; color:#4a5568; margin-bottom:6px;">// PROTOCOLO DE ACCESO</p>
+                <h2 style="font-family:'Orbitron',sans-serif; font-size:16px; color:#00d4ff; letter-spacing:3px; margin-bottom:20px;">SIN SESIÓN ACTIVA</h2>
+                <p style="color:#7a8fa6; font-size:14px; line-height:1.7; margin-bottom:24px;">
+                    Para acceder a tu cuenta o crear una nueva, ve al panel de inicio de sesión en la página principal.
+                </p>
+                <a href="../index.html" style="
+                    display:block; text-align:center;
+                    background:#ffc800; color:#000; padding:13px;
+                    font-family:'Orbitron',sans-serif; font-size:10px;
+                    font-weight:700; letter-spacing:2px; text-decoration:none;
+                    clip-path:polygon(6% 0,100% 0,100% 70%,94% 100%,0 100%,0% 30%);
+                    transition:background 0.2s;">IR AL INICIO → REGISTRARSE</a>
+            </div>
+
+            <!-- Panel: Logueado -->
+            <div id="panelUser" style="display:none;">
+                <p style="font-family:'Orbitron',sans-serif; font-size:9px; letter-spacing:3px; color:#4a5568; margin-bottom:6px;">// SESIÓN ACTIVA</p>
+                <h2 style="font-family:'Orbitron',sans-serif; font-size:16px; color:#00d4ff; letter-spacing:3px; margin-bottom:20px;">AGENTE IDENTIFICADO</h2>
+                <div style="display:flex; align-items:center; gap:16px; margin-bottom:16px;">
+                    <img src="/Iconologin.png" style="width:52px;height:52px;border-radius:50%;border:2px solid #ffc800;box-shadow:0 0 12px rgba(255,200,0,0.3);">
+                    <div>
+                        <div id="displayName" style="font-family:'Orbitron',sans-serif; font-size:13px; color:#ffc800; letter-spacing:2px; font-weight:700;"></div>
+                        <div id="displayEmail" style="font-size:12px; color:#4a5568; letter-spacing:1px; margin-top:3px;"></div>
+                    </div>
+                </div>
+                <div style="display:flex;align-items:center;gap:6px;font-family:'Orbitron',sans-serif;font-size:9px;letter-spacing:2px;color:#2ecc71;margin-bottom:20px;">
+                    <span style="width:7px;height:7px;border-radius:50%;background:#2ecc71;box-shadow:0 0 6px #2ecc71;display:inline-block;"></span>
+                    CONEXIÓN ESTABLECIDA
+                </div>
+                <div style="height:1px;background:linear-gradient(90deg,transparent,rgba(0,212,255,0.2),transparent);margin-bottom:16px;"></div>
+                <button id="btnLogout" style="
+                    width:100%; background:transparent;
+                    border:1px solid rgba(255,60,60,0.4); color:#ff3c3c;
+                    padding:11px; font-family:'Orbitron',sans-serif;
+                    font-size:10px; font-weight:700; letter-spacing:2px;
+                    cursor:pointer; transition:background 0.2s;">CERRAR SESIÓN</button>
+            </div>
+        </div>
+    </div>
+
     <script>
-        const menuBtn = document.getElementById('menuToggle');
-        const sideMenu = document.getElementById('sideMenu');
-        menuBtn.addEventListener('click', () => {
-            sideMenu.classList.toggle('open');
+        /* Menú lateral */
+        document.getElementById('menuToggle').addEventListener('click', () => {
+            document.getElementById('sideMenu').classList.toggle('open');
         });
 
-        /* EFECTO CLICK GLOW */
-
+        /* Click glow */
         document.addEventListener("click", function(e){
-
             const glow = document.createElement("div");
             glow.className = "click-glow";
-
             glow.style.left = e.clientX + "px";
-            glow.style.top = e.clientY + "px";
-
+            glow.style.top  = e.clientY + "px";
             document.body.appendChild(glow);
-
-            setTimeout(() => {
-                glow.remove();
-            }, 600);
-
+            setTimeout(() => glow.remove(), 600);
         });
     </script>
+
+    <!-- Firebase Auth compartida -->
+    <script type="module">
+        import { initializeApp }    from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getAuth, onAuthStateChanged, signOut }
+            from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+
+        const firebaseConfig = {
+            apiKey:            "AIzaSyDjpLypLYdqboN0o1beNEVpeH_H0YGTP6U",
+            authDomain:        "layer8games-5bbeb.firebaseapp.com",
+            projectId:         "layer8games-5bbeb",
+            storageBucket:     "layer8games-5bbeb.firebasestorage.app",
+            messagingSenderId: "337957661033",
+            appId:             "1:337957661033:web:41cffb9300add7913cb5f8"
+        };
+
+        const app  = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+
+        const modal       = document.getElementById('authModal');
+        const panelGuest  = document.getElementById('panelGuest');
+        const panelUser   = document.getElementById('panelUser');
+        const avatar      = document.getElementById('userAvatar');
+
+        /* Abrir modal al clickear avatar */
+        document.getElementById('loginTrigger').addEventListener('click', e => {
+            e.preventDefault();
+            modal.style.display = 'flex';
+        });
+
+        /* Cerrar modal */
+        document.getElementById('closeModal').addEventListener('click', () => {
+            modal.style.display = 'none';
+        });
+        modal.addEventListener('click', e => {
+            if (e.target === modal) modal.style.display = 'none';
+        });
+
+        /* Logout */
+        document.getElementById('btnLogout').addEventListener('click', async () => {
+            await signOut(auth);
+            modal.style.display = 'none';
+        });
+
+        /* Detectar sesión — Firebase comparte la sesión entre páginas del mismo dominio */
+        onAuthStateChanged(auth, user => {
+            if (user) {
+                panelGuest.style.display = 'none';
+                panelUser.style.display  = 'block';
+
+                const name = user.displayName || user.email.split('@')[0].toUpperCase();
+                document.getElementById('displayName').textContent  = name;
+                document.getElementById('displayEmail').textContent = user.email;
+
+                avatar.style.border    = '2px solid #ffc800';
+                avatar.style.boxShadow = '0 0 10px rgba(255,200,0,0.4)';
+                avatar.title = 'Sesión: ' + user.email;
+            } else {
+                panelGuest.style.display = 'block';
+                panelUser.style.display  = 'none';
+
+                avatar.style.border    = '1px solid rgba(0,212,255,0.3)';
+                avatar.style.boxShadow = '';
+                avatar.title = '';
+            }
+        });
+    </script>
+
 </body>
 </html>
